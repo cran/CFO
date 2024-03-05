@@ -88,7 +88,7 @@ CFO2d.oc <- function(nsimu = 1000, target, p.true, init.level = c(1,1), ncohort,
   avg_results$percentstop <- mean(sapply(results, `[[`, "earlystop"))
   avg_results$simu.setup <- data.frame(target = target, ncohort = ncohort, cohortsize = cohortsize, design = "2dCFO", nsimu = nsimu)
   
-  class(avg_results) <- "cfo"
+  class(avg_results) <- c("cfo_oc","cfo")
   
   return(avg_results)
 }

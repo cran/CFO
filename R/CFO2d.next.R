@@ -388,7 +388,8 @@ CFO2d.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=tar
   nextdose <- currdose+c(cidx.A, cidx.B)
   decision_values <- c("de-escalation", "stay", "escalation")
   decision <- decision_values[match(c(cidx.A, cidx.B), c(-1, 0, 1))]
-  out <- list(target=target, cys=cys, cns=cns, decision=decision, currdose = currdose, nextdose = nextdose, overtox = overtox)
-  class(out) <- "cfo"
+  out <- list(target=target, cys=cys, cns=cns, decision=decision, currdose = currdose, 
+              nextdose = nextdose, overtox = overtox)
+  class(out) <- c("cfo_decision", "cfo")
   return(out)
 }

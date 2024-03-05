@@ -230,6 +230,6 @@ CFO.oc <- function(nsimu=5000, design, target, p.true, init.level=1, ncohort, co
                 simu.setup = data.frame(target = target, ncohort = ncohort, 
                                         cohortsize = cohortsize, design = design, nsimu = nsimu))
   }
-  class(out) <- "cfo"
+  class(out) <- c("cfo_oc","cfo")
   return(out)
 }

@@ -53,7 +53,7 @@
 #'             \emph{Journal of the Royal Statistical Society. Series C (Applied Statistics)}, 33(3), 352–357.
 #'
 #' @examples
-#' ntox <- matrix(c(3, 0, 2, 0, 0,
+#' ntox <- matrix(c(0, 0, 2, 0, 0,
 #'                 0, 2, 7, 0, 0,
 #'                 0, 2, 0, 0, 0), 
 #'               nrow = 3, ncol = 5, byrow = TRUE)
@@ -164,7 +164,7 @@ CFO2d.selectmtd <- function (target, npts, ntox, prior.para=list(alp.prior=targe
     }
     out = list(target = target, MTD = selectdoses)
   }
-  class(out)<-"cfo"
+  class(out)<-c("cfo_sel","cfo")
   return(out)
 }
 

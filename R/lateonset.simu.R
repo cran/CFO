@@ -237,6 +237,6 @@ lateonset.simu <- function(design, target, p.true, init.level=1, ncohort, cohort
               over.doses=over.doses, cohortdose=doselist, ptoxic=ptoxic, patientDLT = dlts,
               sumDLT=sum(dlts), earlystop=earlystop,
               totaltime=assess.t[length(assess.t)], entertimes=enter.times, DLTtimes=dlt.times)
-  class(out) <- "cfo"
+  class(out) <- c("cfo_trial", "cfo")
   return(out)
 }

@@ -181,6 +181,6 @@ CFO.simu <- function(design, target, p.true, init.level=1, ncohort, cohortsize,
   out<-list(target=target, MTD=MTD, correct=correct, npatients=ans, ntox=ays, npercent=npercent, 
             over.doses=tover.doses, cohortdose=doselist, ptoxic=ptoxic, patientDLT=DLTlist,
             sumDLT=sum(DLTlist), earlystop=earlystop)
-  class(out) <- "cfo"
+  class(out) <- c("cfo_trial", "cfo")
   return(out)
 }

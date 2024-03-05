@@ -58,7 +58,7 @@ When appropriate, another dose selection procedure (e.g., based on a fitted logi
 the MTD after the completion of the trial using the 2dCFO design.
 }
 \examples{
-ntox <- matrix(c(3, 0, 2, 0, 0,
+ntox <- matrix(c(0, 0, 2, 0, 0,
                 0, 2, 7, 0, 0,
                 0, 2, 0, 0, 0), 
               nrow = 3, ncol = 5, byrow = TRUE)

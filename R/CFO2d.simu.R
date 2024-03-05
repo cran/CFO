@@ -229,9 +229,9 @@ CFO2d.simu <- function(target, p.true, init.level=c(1,1), ncohort, cohortsize,
   }
   ptoxic <- ptoxic/(ncohort*cohortsize)
   # simu.res <- list(dose = simu.res.dose, DLT = simu.res.DLT)
-  out<-list(target=target, MTD=MTD, correct=correct, npatients=ans, ntox=ays, 
-            npercent=npercent, over.doses=tover.doses, cohortdose=simu.res.dose, ptoxic=ptoxic,
-            patientDLT = simu.res.DLT, sumDLT=sum(simu.res.DLT), earlystop=earlystop)
-  class(out) <- "cfo"
+  out<-list(target=target, MTD=MTD, correct=correct, npatients=ans, ntox=ays, npercent=npercent, 
+            over.doses=tover.doses, cohortdose=simu.res.dose, ptoxic=ptoxic, patientDLT = simu.res.DLT,
+            sumDLT=sum(simu.res.DLT), earlystop=earlystop)
+  class(out) <- c("cfo_trial", "cfo")
   return(out)
 }

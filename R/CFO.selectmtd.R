@@ -166,8 +166,7 @@ CFO.selectmtd <- function (target, npts, ntox, prior.para=list(alp.prior=target,
       message("All tested doses are overly toxic. No MTD is selected! \n")
       out = list(target = target, MTD = selectdose, p_est = NA, p_overdose = NA)
     } else {
-      out = list(target = target, MTD = selectdose, p_est = p_est,
-                 p_overdose = A4)
+      out = list(target = target, MTD = selectdose, p_est = p_est, p_overdose = A4)
     }
   }
   else {
@@ -176,7 +175,7 @@ CFO.selectmtd <- function (target, npts, ntox, prior.para=list(alp.prior=target,
     }
     out = list(target = target, MTD = selectdose)
   }
-  class(out)<-"cfo"
+  class(out)<-c("cfo_sel","cfo")
   return(out)
 }
 

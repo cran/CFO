@@ -25,17 +25,14 @@ the averaged number of patients allocated to different doses in one simulation a
 number of DLT observed for different doses in one simulation.
 }
 \note{
-In the example, we set \code{nsimu = 100} for testing time considerations. In reality, \code{nsimu}
+In the example, we set \code{nsimu = 5} for testing time considerations. In reality, \code{nsimu}
 is typically set to 5000 to ensure the accuracy of the results.
 }
 \examples{
 
-\donttest{
-# This test may take longer than 5 seconds to run
-# It is provided for illustration purposes only
-# Users can run this code directly
+
 ## settings for 1dCFO
-nsimu <- 100; ncohort <- 12; cohortsize <- 3; init.level <- 1
+nsimu <- 5; ncohort <- 12; cohortsize <- 3; init.level <- 1
 p.true <- c(0.02, 0.05, 0.20, 0.28, 0.34, 0.40, 0.44); target <- 0.2
 assess.window <- 3; accrual.rate <- 2; tte.para <- 0.5; accrual.dist <- 'unif'
 
@@ -58,8 +55,10 @@ plot(faCFOoc)
 selmtd <- CFO.selectmtd(target=0.2, npts=c(3,3,27,3,0,0,0), ntox=c(0,0,4,2,0,0,0))
 plot(selmtd)
 
-
-
+\donttest{
+# This test may take longer than 5 seconds to run
+# It is provided for illustration purposes only
+# Users can run this code directly
 ## settings for 2dCFO
 p.true <- matrix(c(0.05, 0.10, 0.15, 0.30, 0.45,
                    0.10, 0.15, 0.30, 0.45, 0.55,
@@ -72,8 +71,8 @@ CFO2dtrial <- CFO2d.simu(target, p.true, init.level = c(1,1), ncohort, cohortsiz
 plot(CFO2dtrial)
 
 ## plot the multiple simulation returned by CFO2d.oc()
-CFO2doc <- CFO2d.oc(nsimu = 100, target, p.true, init.level = c(1,1), ncohort, cohortsize, 
-                    seeds = 1:100)
+CFO2doc <- CFO2d.oc(nsimu = 5, target, p.true, init.level = c(1,1), ncohort, cohortsize, 
+                    seeds = 1:5)
 plot(CFO2doc)
 
 ## select a MTD based on the trial data
@@ -82,6 +81,7 @@ npts <- matrix(c(3, 0, 12, 0, 0, 3, 12, 24, 0, 0, 3, 3, 0, 0, 0), nrow = 3, ncol
 selmtd <- CFO2d.selectmtd(target=0.3, npts=npts, ntox=ntox)
 plot(selmtd)
 }
+
 }
 \author{
 Jialu Fang, Wenliang Wang, and Guosheng Yin

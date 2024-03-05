@@ -321,7 +321,7 @@ lateonset.next <- function(design, target, p.true, currdose, assess.window, ente
 
   out <- list(target=target, ays=ays, ans=ans, decision=decision, currdose = currdose, 
               nextdose=nextdose, overtox=overtox, over.doses=over.doses)
-  class(out) <- "cfo"
+  class(out) <- c("cfo_decision", "cfo")
   return(out)
 }
 

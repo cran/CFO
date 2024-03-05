@@ -362,7 +362,7 @@ aCFO.next <- function(target, ays, ans, currdose, prior.para=list(alp.prior=targ
   
   out <- list(target=target, ays=ays, ans=ans, decision=decision, currdose = currdose, 
               nextdose=nextdose, overtox=position)
-  class(out) <- "cfo"
+  class(out) <- c("cfo_decision", "cfo")
   return(out)
 }
 

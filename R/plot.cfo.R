@@ -13,7 +13,7 @@
 #'
 #' @return \code{plot()} returns a figure or a series of figures depending on the object entered.
 #' 
-#' @note In the example, we set \code{nsimu = 100} for testing time considerations. In reality, \code{nsimu} 
+#' @note In the example, we set \code{nsimu = 5} for testing time considerations. In reality, \code{nsimu} 
 #'       is typically set to 5000 to ensure the accuracy of the results.
 #' 
 #' 
@@ -27,12 +27,9 @@
 #'
 #' @examples
 #' 
-#' \donttest{
-#' # This test may take longer than 5 seconds to run
-#' # It is provided for illustration purposes only
-#' # Users can run this code directly
+#' 
 #' ## settings for 1dCFO
-#' nsimu <- 100; ncohort <- 12; cohortsize <- 3; init.level <- 1
+#' nsimu <- 5; ncohort <- 12; cohortsize <- 3; init.level <- 1
 #' p.true <- c(0.02, 0.05, 0.20, 0.28, 0.34, 0.40, 0.44); target <- 0.2
 #' assess.window <- 3; accrual.rate <- 2; tte.para <- 0.5; accrual.dist <- 'unif'
 #' 
@@ -55,8 +52,10 @@
 #' selmtd <- CFO.selectmtd(target=0.2, npts=c(3,3,27,3,0,0,0), ntox=c(0,0,4,2,0,0,0))
 #' plot(selmtd)
 #' 
-#' 
-#' 
+#' \donttest{
+#' # This test may take longer than 5 seconds to run
+#' # It is provided for illustration purposes only
+#' # Users can run this code directly
 #' ## settings for 2dCFO
 #' p.true <- matrix(c(0.05, 0.10, 0.15, 0.30, 0.45,
 #'                    0.10, 0.15, 0.30, 0.45, 0.55,
@@ -69,8 +68,8 @@
 #' plot(CFO2dtrial)
 #' 
 #' ## plot the multiple simulation returned by CFO2d.oc()
-#' CFO2doc <- CFO2d.oc(nsimu = 100, target, p.true, init.level = c(1,1), ncohort, cohortsize, 
-#'                     seeds = 1:100)
+#' CFO2doc <- CFO2d.oc(nsimu = 5, target, p.true, init.level = c(1,1), ncohort, cohortsize, 
+#'                     seeds = 1:5)
 #' plot(CFO2doc)
 #' 
 #' ## select a MTD based on the trial data
@@ -78,7 +77,8 @@
 #' npts <- matrix(c(3, 0, 12, 0, 0, 3, 12, 24, 0, 0, 3, 3, 0, 0, 0), nrow = 3, ncol = 5, byrow = TRUE)
 #' selmtd <- CFO2d.selectmtd(target=0.3, npts=npts, ntox=ntox)
 #' plot(selmtd)
-#' }
+#'}
+#' 
  
 plot.cfo<- function (x,..., name = deparse(substitute(x)))
 {
@@ -166,7 +166,7 @@ plot.cfo<- function (x,..., name = deparse(substitute(x)))
     ###############################################################################
     #########################plot for XXX.simu()###################################
     ###############################################################################
-    if (!is.null(objectPlot$correct)) { 
+    else if (!is.null(objectPlot$correct)) { 
       if(length(objectPlot$MTD) == 1){
         if (!is.null(objectPlot$totaltime)){ #plot for lateonset.simu()
           dose <- objectPlot$cohortdose
@@ -224,7 +224,8 @@ plot.cfo<- function (x,..., name = deparse(substitute(x)))
             xuse=c(dfnew[row,"sequence"],dfnew[row,"new_seq"])
             yuse=c(dfnew[row,"dose_levels"],dfnew[row,"new_y"])
             dfuse <-data.frame(xuse=xuse, yuse=yuse)
-            p <- p + geom_point(aes(x = xuse[2], y = yuse[2]), shape = 4,size = 2.5, data = dfuse)+
+            p <- p + 
+              annotate("point", x = xuse[2], y = yuse[2], shape = 4,size = 2.5) +
               geom_step(aes(x = xuse, y = yuse), data = dfuse,direction = 'vh',
                         linetype = 2)
           }
@@ -307,7 +308,7 @@ plot.cfo<- function (x,..., name = deparse(substitute(x)))
     ###############################################################################
     #########################plot for CFO.selectmtd()###################################
     ###############################################################################
-    if (!is.null(objectPlot$p_est)){
+    else if (!is.null(objectPlot$p_est)){
       if (objectPlot$MTD[1] == 99) {
         warning("All tested doses are overly toxic. No MTD is selected!\n")
       }
@@ -364,6 +365,14 @@ plot.cfo<- function (x,..., name = deparse(substitute(x)))
       }
 
   
+    }
+    
+    ###############################################################################
+    #########################plot for others###################################
+    ###############################################################################
+    else{
+      warning("The variable cannot be plotted. \n 
+              Please double check and specify the variable to be plotted...\n")
     }
   }
 }

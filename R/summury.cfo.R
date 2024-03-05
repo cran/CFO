@@ -11,19 +11,16 @@
 #'
 #' @author Jialu Fang, Wenliang Wang, and Guosheng Yin
 #' 
-#' @note In the example, we set \code{nsimu = 100} for testing time considerations. In reality, \code{nsimu} 
+#' @note In the example, we set \code{nsimu = 5} for testing time considerations. In reality, \code{nsimu} 
 #'       is typically set to 5000 to ensure the accuracy of the results.
 #'
 #' @export
 #' 
 #' @examples
 #' 
-#' \donttest{
-#' # This test may take longer than 5 seconds to run
-#' # It is provided for illustration purposes only
-#' # Users can run this code directly
+#' 
 #' ## settings for 1dCFO
-#' nsimu <- 100; ncohort <- 12; cohortsize <- 3; init.level <- 1
+#' nsimu <- 5; ncohort <- 12; cohortsize <- 3; init.level <- 1
 #' p.true <- c(0.02, 0.05, 0.20, 0.28, 0.34, 0.40, 0.44); target <- 0.2
 #' assess.window <- 3; accrual.rate <- 2; tte.para <- 0.5; accrual.dist <- 'unif'
 #' 
@@ -59,8 +56,10 @@
 #'                       assess.window, tte.para, accrual.rate, accrual.dist, seeds = 1:nsimu)
 #' summary(faCFOoc)
 #' 
-#' 
-#' 
+#' \donttest{
+#' # This test may take longer than 5 seconds to run
+#' # It is provided for illustration purposes only
+#' # Users can run this code directly
 #' ## settings for 2dCFO
 #' p.true <- matrix(c(0.05, 0.10, 0.15, 0.30, 0.45,
 #' 0.10, 0.15, 0.30, 0.45, 0.55,
@@ -92,8 +91,8 @@
 #' summary(CFO2dtrial)
 #' 
 #' ## summarize the object returned by CFO2d.oc()
-#' CFO2doc <- CFO2d.oc(nsimu = 100, target, p.true, init.level = c(1,1), ncohort, cohortsize, 
-#'                     seeds = 1:100)
+#' CFO2doc <- CFO2d.oc(nsimu = 5, target, p.true, init.level = c(1,1), ncohort, cohortsize, 
+#'                     seeds = 1:5)
 #' summary(CFO2doc)
 #' }
 #' 
@@ -168,13 +167,13 @@ summary.cfo<- function (object, ...)
   if(!is.null(object$correct)){ ###summary for XXX.simu()
     if (length(object$MTD) == 1) {  ###summary for one-dim XXX.simu()
       if (object$MTD == 99) {
-        cat("All tested doses are overly toxic. No MTD should be selected! \n\n")
+        warning("All tested doses are overly toxic. No MTD should be selected! \n\n")
       }
       else {
         cat("The selected MTD is dose level", paste0(object$MTD, "."), "\n")
         cat("For",length(object$cohortdose),"cohorts, the dose level assigned to each cohort is: \n")
         cat(formatC(object$cohortdose, format = "d"), sep = "  ", "\n")
-        cat("number of toxicities observed at each dose level:\n")
+        cat("Number of toxicities observed at each dose level:\n")
         cat(formatC(object$ntox, format = "d"), sep = "  ", "\n")
         cat("Number of patients treated at each dose level:\n")
         cat(formatC(object$npatients, format = "d"), sep = "  ", "\n")
@@ -185,7 +184,7 @@ summary.cfo<- function (object, ...)
       }
     } else {  ###summary for two-dim XXX.simu()
       if (object$MTD[1] == 99 | object$MTD[2] == 99) {
-        cat("All tested doses are overly toxic. No MTD should be selected! \n\n")
+        warning("All tested doses are overly toxic. No MTD should be selected! \n\n")
       }
       else {
         # Summary for 2dCFO single trail simulation
@@ -200,7 +199,7 @@ summary.cfo<- function (object, ...)
       )
       print(cohort_data, row.names = FALSE)
       cat("\n")
-      cat("number of toxicity observed at each dose level:\n")
+      cat("Number of toxicity observed at each dose level:\n")
       print(object$ntox)
       cat("\n")
       cat("Number of patients treated at each dose level:\n")
@@ -245,7 +244,7 @@ summary.cfo<- function (object, ...)
   if (!is.null(object$p_est)){ ##summary for CFO.selectmtd()
     if (length(object$MTD) == 1) { ##summary for one dim CFO.selectmtd()
       if (object$MTD == 99) {
-        cat("All tested doses are overly toxic. No MTD should be selected! \n\n")
+        warning("All tested doses are overly toxic. No MTD should be selected! \n\n")
       }
       else {
         cat("The MTD is dose level ", paste0(object$MTD, "."), "\n\n")
@@ -264,7 +263,7 @@ summary.cfo<- function (object, ...)
     if (length(object$MTD) >= 2) {
       if (length(object$MTD) == 2) {
         if (object$MTD[1, 1] == 99 && object$MTD[1, 2] ==99) {
-          cat("All tested doses are overly toxic. No MTD is selected! \n")
+          warning("All tested doses are overly toxic. No MTD is selected! \n")
         }
         else {
           cat("The MTD is dose combination (", object$MTD[1,1], ", ", object$MTD[1, 2], "). \n\n")

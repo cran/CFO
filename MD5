@@ -1,4 +1,4 @@
-7882f1b45cb8135621dd77af301d6efe *DESCRIPTION
+a1c174cc6454cd7d439900b573ec3992 *DESCRIPTION
 22ab174218b2631737e068b2ee5dfb70 *NAMESPACE
 24a80cdb3c6098fd95dff1eae19187d0 *R/CFO.next.R
 99ec2df116598b664d284114fef8e1cd *R/CFO.oc.R
@@ -11,7 +11,7 @@ e74adb1965eb4e25ef5f7040f4dff371 *R/CFO2d.simu.R
 f1fbacf240cffc22e7dcb9a68ec321b4 *R/aCFO.next.R
 9e811204220aac3d23ef417af579f53a *R/lateonset.next.R
 9ff5e7b78c727bc4a142447874d6b8c2 *R/lateonset.simu.R
-7ec4cca329ec793cae5ee2c35bd0015e *R/plot.cfo.R
+eba92168233fdc7a8d7c14a9b111488e *R/plot.cfo.R
 99d8cc57aaa72ee2a990c9f4d65212a5 *R/print.cfo.R
 8c2df59df83ff14b1d07fec13874e8bc *R/summury.cfo.R
 6a09ab8f0c251fd297352a17daeed36a *man/CFO.next.Rd

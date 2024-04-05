@@ -204,12 +204,18 @@ plot.cfo<- function (x,..., name = deparse(substitute(x)))
           
           new_y <- add_noise(new_y)
           
-          df <- data.frame(sequence = sequences, dose_levels = dose_levels, DLT_observed = DLT_observed)
-          dfnew <- data.frame(sequence = sequences, dose_levels = dose_levels, new_seq = new_seq, new_y = new_y)
+          null_data <- rep(NA, cohortsize)
+          sequences <- c(sequences, null_data)
+          dose_levels <- c(dose_levels, null_data)
+          DLT_observed <- cbind(DLT_observed,rep(2, cohortsize))
+          
+          df <- data.frame(sequences = sequences, dose_levels = dose_levels, DLT_observed = DLT_observed)
+          dfnew <- data.frame(sequences = as.vector(na.omit(sequences)), dose_levels = as.vector(na.omit(dose_levels)), new_seq = new_seq, new_y = new_y)
           dfnew <- na.omit(dfnew)
           
+          suppressWarnings({
           # Create the plot
-          p <- ggplot(df, aes(x = sequence, y = dose_levels)) +
+          p <- ggplot(df, aes(x = sequences, y = dose_levels)) +
             geom_point(aes(shape = factor(DLT_observed,levels=c(0,1,2))), color = 'black', size = 2.5) +
             geom_step(direction = 'hv', color = 'black') +
             scale_y_continuous(breaks = 1:length(y_labels), labels = y_labels) +
@@ -217,11 +223,15 @@ plot.cfo<- function (x,..., name = deparse(substitute(x)))
                  y = "Dose level",
                  fill = 'DLT observed') +
             theme_minimal() +
-            theme(text = element_text(size = 12), legend.title=element_blank(), legend.position = c(1, 0), legend.justification = c(1, 0)) +
-            scale_shape_manual(values = c(1, 16, 4), labels = c('DLT not observed', 'DLT observed',"DLT time"), drop = FALSE)
+            theme(text = element_text(size = 12), 
+                  legend.title=element_blank(), 
+                  legend.position = 'top', legend.margin = margin(0, 0, 0, 0)) +
+            scale_shape_manual(values = c(1, 16, 4), 
+                               labels = c('DLT not observed', 'DLT observed', 'DLT time'), 
+                               drop = FALSE) 
           
           for (row in 1:(nrow(dfnew))){
-            xuse=c(dfnew[row,"sequence"],dfnew[row,"new_seq"])
+            xuse=c(dfnew[row,"sequences"],dfnew[row,"new_seq"])
             yuse=c(dfnew[row,"dose_levels"],dfnew[row,"new_y"])
             dfuse <-data.frame(xuse=xuse, yuse=yuse)
             p <- p + 
@@ -229,7 +239,7 @@ plot.cfo<- function (x,..., name = deparse(substitute(x)))
               geom_step(aes(x = xuse, y = yuse), data = dfuse,direction = 'vh',
                         linetype = 2)
           }
-          print(p)
+          print(p)})
         }
         else{ #plot for CFO.simu()
           dose <- objectPlot$cohortdose
@@ -260,7 +270,8 @@ plot.cfo<- function (x,..., name = deparse(substitute(x)))
                  y = "Dose level",
                  fill = 'DLT observed') +
             theme_minimal() +
-            theme(text = element_text(size = 12), legend.title=element_blank(), legend.position = c(1, 0), legend.justification = c(1, 0)) +
+            theme(text = element_text(size = 12), legend.title=element_blank(), 
+                  legend.position= 'top', legend.margin = margin(0, 0, 0, 0)) +
             scale_fill_manual(values = c('white', 'black'), labels = c('DLT not observed', 'DLT observed'))
           
           # Display the plot
@@ -298,7 +309,8 @@ plot.cfo<- function (x,..., name = deparse(substitute(x)))
                y = "Combined dose level",
                fill = 'DLT observed') +
           theme_minimal() +
-          theme(text = element_text(size = 12), legend.title=element_blank(), legend.position = c(1, 0), legend.justification = c(1, 0)) +
+          theme(text = element_text(size = 12), legend.title=element_blank(), 
+                legend.position = 'top', legend.margin = margin(0, 0, 0, 0)) +
           scale_fill_manual(values = c('white', 'black'), labels = c('DLT not observed', 'DLT observed'))
         # Display the plot
         print(p)

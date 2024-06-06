@@ -71,7 +71,9 @@ plot(selmtd)
 Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
 \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
 Bril G, Dykstra R, Pillers C, Robertson T (1984). Algorithm AS 206: Isotonic regression in two independent variables.
-\emph{Journal of the Royal Statistical Society. Series C (Applied Statistics)}, 33(3), 352–357.
+\emph{Journal of the Royal Statistical Society. Series C (Applied Statistics)}, 33(3), 352–357. \cr
+Fang J, Yin G (2024). Fractional accumulative calibration‐free odds (f‐aCFO) design for delayed toxicity
+in phase I clinical trials. \emph{Statistics in Medicine}.
 }
 \author{
 Jialu Fang, Wenliang Wang, and Guosheng Yin

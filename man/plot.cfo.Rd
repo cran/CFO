@@ -40,6 +40,15 @@ assess.window <- 3; accrual.rate <- 2; tte.para <- 0.5; accrual.dist <- 'unif'
 CFOtrial <- CFO.simu(design = 'CFO', target, p.true, init.level, ncohort, cohortsize, seed = 1)
 plot(CFOtrial)
 
+## plot the object returned by CFO.selectmtd()
+selmtd <- CFO.selectmtd(target=0.2, npts=c(3,3,27,3,0,0,0), ntox=c(0,0,4,2,0,0,0))
+plot(selmtd)
+
+\donttest{
+# This test may take longer than 5 seconds to run
+# It is provided for illustration purposes only
+# Users can run this code directly
+
 ## plot the object returned by lateonset.simu()
 ## f-aCFO design
 faCFOtrial <- lateonset.simu (design = 'f-aCFO', target, p.true, init.level,  
@@ -51,14 +60,6 @@ faCFOoc <- CFO.oc (nsimu, design = 'f-aCFO', target, p.true, init.level, ncohort
         assess.window, tte.para, accrual.rate, accrual.dist, seeds = 1:nsimu)
 plot(faCFOoc)
 
-## plot the object returned by CFO.selectmtd()
-selmtd <- CFO.selectmtd(target=0.2, npts=c(3,3,27,3,0,0,0), ntox=c(0,0,4,2,0,0,0))
-plot(selmtd)
-
-\donttest{
-# This test may take longer than 5 seconds to run
-# It is provided for illustration purposes only
-# Users can run this code directly
 ## settings for 2dCFO
 p.true <- matrix(c(0.05, 0.10, 0.15, 0.30, 0.45,
                    0.10, 0.15, 0.30, 0.45, 0.55,

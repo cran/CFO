@@ -48,19 +48,26 @@
 #' @author Jialu Fang, Wenliang Wang, and Guosheng Yin
 #' 
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
-#'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066.
+#'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
+#'             Fang J, Yin G (2024). Fractional accumulative calibration‐free odds (f‐aCFO) design for delayed toxicity 
+#'             in phase I clinical trials. \emph{Statistics in Medicine}.
 #'
 #' @examples
-#' target <- 0.2; ncohort <- 12; cohortsize <- 3; init.level <- 1
+#' target <- 0.2; ncohort <- 33; cohortsize <- 3; init.level <- 1
 #' p.true <- c(0.01, 0.07, 0.20, 0.35, 0.50, 0.65, 0.80)
 #' ### find the MTD for a single CFO simulation
 #' CFOtrial <- CFO.simu(design = 'CFO', target, p.true, init.level, ncohort, cohortsize, seed = 1)
 #' summary(CFOtrial)
 #' plot(CFOtrial)
+#' \donttest{
+#' # This test may take longer than 5 seconds to run
+#' # It is provided for illustration purposes only
+#' # Users can run this code directly
 #' ### find the MTD for a single aCFO simulation
 #' aCFOtrial <- CFO.simu(design = 'aCFO', target, p.true, init.level, ncohort, cohortsize, seed = 1)
 #' summary(aCFOtrial)
 #' plot(aCFOtrial)
+#'}
 #' @export
 CFO.simu <- function(design, target, p.true, init.level=1, ncohort, cohortsize,
                      prior.para=list(alp.prior=target, bet.prior=1-target),

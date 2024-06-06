@@ -47,7 +47,9 @@
 #' @author Jialu Fang, Wenliang Wang, and Guosheng Yin 
 #' 
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
-#'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066.
+#'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
+#'             Fang J, Yin G (2024). Fractional accumulative calibration‐free odds (f‐aCFO) design for delayed toxicity 
+#'             in phase I clinical trials. \emph{Statistics in Medicine}.
 #'
 #' @examples
 #' ## determine the dose level for the next cohort of new patients
@@ -106,8 +108,8 @@ aCFO.next <- function(target, ays, ans, currdose, prior.para=list(alp.prior=targ
     fn.max <- function(x){
       pbeta(x, alp1, bet1)*dbeta(x, alp2, bet2)
     }
-    const.min <- integrate(fn.min, lower=0, upper=1)$value
-    const.max <- integrate(fn.max, lower=0, upper=1)$value
+    const.min <- integrate(fn.min, lower=0, upper=0.99, subdivisions=1000, rel.tol = 1e-10)$value
+    const.max <- integrate(fn.max, lower=0, upper=1, rel.tol = 1e-10)$value
     p1 <- integrate(fn.min, lower=0, upper=phi)$value/const.min
     p2 <- integrate(fn.max, lower=0, upper=phi)$value/const.max
     list(p1=p1, p2=p2)

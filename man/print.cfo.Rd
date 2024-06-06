@@ -53,6 +53,12 @@ print(selmtd)
 aCFOtrial <- CFO.simu(design = 'aCFO', target, p.true, init.level, ncohort, cohortsize, seed = 1)
 print(aCFOtrial)
 
+
+\donttest{
+# This test may take longer than 5 seconds to run
+# It is provided for illustration purposes only
+# Users can run this code directly
+
 ## summarize the object returned by lateonset.simu()
 faCFOtrial <- lateonset.simu (design = 'f-aCFO', target, p.true, init.level,  
                 ncohort, cohortsize, assess.window, tte.para, accrual.rate, accrual.dist, seed = 1)
@@ -63,10 +69,6 @@ faCFOoc <- CFO.oc (nsimu, design = 'f-aCFO', target, p.true, init.level, ncohort
                       assess.window, tte.para, accrual.rate, accrual.dist, seeds = 1:nsimu)
 print(faCFOoc)
 
-\donttest{
-# This test may take longer than 5 seconds to run
-# It is provided for illustration purposes only
-# Users can run this code directly
 ## settings for 2dCFO
 p.true <- matrix(c(0.05, 0.10, 0.15, 0.30, 0.45,
 0.10, 0.15, 0.30, 0.45, 0.55,

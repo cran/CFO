@@ -106,8 +106,8 @@ CFO.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=targe
     fn.max <- function(x){
       pbeta(x, alp1, bet1)*dbeta(x, alp2, bet2)
     }
-    const.min <- integrate(fn.min, lower=0, upper=1)$value
-    const.max <- integrate(fn.max, lower=0, upper=1)$value
+    const.min <- integrate(fn.min, lower=0, upper=0.99, subdivisions=1000, rel.tol = 1e-10)$value
+    const.max <- integrate(fn.max, lower=0, upper=1, rel.tol = 1e-10)$value
     p1 <- integrate(fn.min, lower=0, upper=phi)$value/const.min
     p2 <- integrate(fn.max, lower=0, upper=phi)$value/const.max
     
@@ -250,7 +250,7 @@ CFO.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=targe
     cy <- cys[1]
     cn <- cns[1]
     if (is.na(cn)){
-      cover.doses[i] <- NA
+      cover.doses[1] <- NA
     }else{
       prior.para <- c(list(y=cy, n=cn),list(alp.prior=alp.prior, bet.prior=bet.prior))
       if (overdose.fn(target, early.stop, prior.para)){

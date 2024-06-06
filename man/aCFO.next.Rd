@@ -78,7 +78,9 @@ summary(decision)
 }
 \references{
 Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
-\emph{Statistical Methods in Medical Research}, 31(6), 1051-1066.
+\emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
+Fang J, Yin G (2024). Fractional accumulative calibration‐free odds (f‐aCFO) design for delayed toxicity
+in phase I clinical trials. \emph{Statistics in Medicine}.
 }
 \author{
 Jialu Fang, Wenliang Wang, and Guosheng Yin

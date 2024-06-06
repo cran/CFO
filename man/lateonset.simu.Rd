@@ -110,7 +110,9 @@ Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical t
 Jin H, Yin G (2023). Time‐to‐event calibration‐free odds design: A robust efficient design for
 phase I trials with late‐onset outcomes. \emph{Pharmaceutical Statistics}. 22(5), 773–783.\cr
 Yin G, Zheng S, Xu J (2013). Fractional dose-finding methods with late-onset toxicity in
-phase I clinical trials. \emph{Journal of Biopharmaceutical Statistics}, 23(4), 856-870.
+phase I clinical trials. \emph{Journal of Biopharmaceutical Statistics}, 23(4), 856-870. \cr
+Fang J, Yin G (2024). Fractional accumulative calibration‐free odds (f‐aCFO) design for delayed toxicity
+in phase I clinical trials. \emph{Statistics in Medicine}.
 }
 \author{
 Jialu Fang, Wenliang Wang, and Guosheng Yin

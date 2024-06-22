@@ -72,12 +72,13 @@
 #'             Fang J, Yin G (2024). Fractional accumulative calibration‐free odds (f‐aCFO) design for delayed toxicity 
 #'             in phase I clinical trials. \emph{Statistics in Medicine}.
 #' 
-#' @importFrom dplyr transmute
+#' @importFrom dplyr transmute 
+#' @import pbapply
 #' @export
 #'
 #' @examples
 #' ## setting
-#' nsimu <- 5; target <- 0.2; ncohort <- 12; cohortsize <- 3; init.level <- 1
+#' nsimu <- 5; target <- 0.2; ncohort <- 10; cohortsize <- 3; init.level <- 1
 #' p.true <- c(0.01, 0.07, 0.20, 0.35, 0.50, 0.65, 0.80)
 #' prior.para = list(alp.prior = target, bet.prior = 1 - target)
 #' assess.window <- 3; accrual.rate <- 2; tte.para <- 0.5; accrual.dist <- 'unif'
@@ -177,7 +178,7 @@ CFO.oc <- function(nsimu=5000, design, target, p.true, init.level=1, ncohort, co
   tmtd <- MTD.level(target, p.true)
   
   
-  results <- lapply(1:nsimu, run.fn)
+  results <- pblapply(1:nsimu, run.fn)
   results_nopara <- lapply(1:nsimu, function(i)results[[i]]$res)
 
   ndose <- length(results_nopara[[1]]$npatients)

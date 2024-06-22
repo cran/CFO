@@ -215,6 +215,9 @@ summary.cfo<- function (object, ...)
   
   if(!is.null(object$decision)){
     if(length(object$decision)==2){ ##summary for two dim XXX.next()
+      cat("The expected toxicity probabilities at the current dose and the eight adjacent doses surrounding it:\n")
+      print(object$toxprob)
+      cat('\n')
       if (is.na(object$overtox)) {
         cat("All tested doses are not overly toxic. \n\n")
       } else {
@@ -224,6 +227,16 @@ summary.cfo<- function (object, ...)
       cat("The decision regarding the direction of movement for drug B is", paste0(object$decision[2], "."), "\n")
       cat("The next cohort will be assigned to dose level (", object$nextdose[1],",",object$nextdose[2],").", "\n")
     } else {  ##summary for one dim XXX.next()
+      if ("cns" %in% names(object)){
+        cat("The expected toxicity probabilities at the left, current, and right dose levels:\n")
+        cat(formatC(object$toxprob,  digits = 4, format = "f"),
+            sep = "  ", "\n")
+      } else if ("ans" %in% names(object)){
+        cat("The expected toxicity probabilities from the lowest to the highest dose levels:\n")
+        cat(formatC(object$toxprob,  digits = 4, format = "f"),
+            sep = "  ", "\n")
+      }
+      
       if (is.na(object$overtox)) {
         cat("All tested doses are not overly toxic. \n\n")
       } else {

@@ -42,6 +42,9 @@
 #'   \item overtox: the situation regarding which position experiences over-toxicity. The dose level indicated by 
 #'   \code{overtox} and all the dose levels above experience over-toxicity. \code{overtox = NA} signifies that the 
 #'   occurrence of over-toxicity did not happen.
+#'   \item toxprob: the expected toxicity probability, \eqn{Pr(p_k > \phi | x_k, m_k)}, at all dose
+#'   levels, where \eqn{p_k}, \eqn{x_k}, and \eqn{m_k} is the dose-limiting toxicity (DLT) rate, the 
+#'   numbers of observed DLTs, and the numbers of patients at dose level \eqn{k}.
 #' }
 #'  
 #' @author Jialu Fang, Wenliang Wang, and Guosheng Yin 
@@ -276,6 +279,13 @@ aCFO.next <- function(target, ays, ans, currdose, prior.para=list(alp.prior=targ
     }
   }
   
+  tover.prob <- rep(0, ndose)
+  for (i in 1:ndose){
+    cy <- ays[i]
+    cn <- ans[i]
+    tover.prob[i] <- post.prob.fn(target, cy, cn, alp.prior, bet.prior)
+  }
+  
   if (cutoff.eli != early.stop) {
     cy <- ays[1]
     cn <- ans[1]
@@ -363,7 +373,7 @@ aCFO.next <- function(target, ays, ans, currdose, prior.para=list(alp.prior=targ
   }
   
   out <- list(target=target, ays=ays, ans=ans, decision=decision, currdose = currdose, 
-              nextdose=nextdose, overtox=position)
+              nextdose=nextdose, overtox=position, toxprob=tover.prob)
   class(out) <- c("cfo_decision", "cfo")
   return(out)
 }

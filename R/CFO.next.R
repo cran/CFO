@@ -30,8 +30,8 @@
 #'          toxicity at the current dose level, we exclude that dose level and those higher levels. If the lowest dose level is overly toxic,
 #'          the trial will be terminated according to the early stopping rule.
 #'          
-#' @note    When the current dose level is the lowest or highest (i.e., at the boundary), the parts in \code{cys} and 
-#'          \code{cns} where there is no data are filled with \code{NA}. \cr
+#' @note    When the current dose level is the lowest or highest (i.e., at the boundary), the parts in \code{cys}, 
+#'          \code{cns}, and \code{toxprob} where there is no data are filled with \code{NA}. \cr
 #'          The dose level indicated by \code{overtox} and all the dose levels above experience over-toxicity, and these dose levels will be eliminated.
 #'          
 #' @return The \code{CFO.next()} function returns a list object comprising the following elements:
@@ -47,6 +47,9 @@
 #'   \item overtox: the situation regarding which positions experience over-toxicity. The dose level indicated 
 #'   by \code{overtox} and all the dose levels above experience over-toxicity. \code{overtox = NA} signifies that 
 #'   the occurrence of over-toxicity did not happen.
+#'   \item toxprob: the expected toxicity probability, \eqn{Pr(p_k > \phi | x_k, m_k)}, at the left, current, and 
+#'   right dose levels, where \eqn{p_k}, \eqn{x_k}, and \eqn{m_k} is the dose-limiting toxicity (DLT) rate, the 
+#'   numbers of observed DLTs, and the numbers of patients at dose level \eqn{k}.
 #' }
 #' @author Jialu Fang, Wenliang Wang, and Guosheng Yin
 #' 
@@ -246,6 +249,17 @@ CFO.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=targe
     }
   }
   
+  cover.prob <- c(0,0,0)
+  for (i in 1:3){
+    cy <- cys[i]
+    cn <- cns[i]
+    if (is.na(cn)){
+      cover.prob[i] <- NA
+    }else{
+      cover.prob[i] <- post.prob.fn(target, cy, cn, alp.prior, bet.prior)
+    }
+  }
+  
   if (cutoff.eli != early.stop) {
     cy <- cys[1]
     cn <- cns[1]
@@ -327,7 +341,7 @@ CFO.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=targe
   }
   
   out <- list(target=target, cys=cys, cns=cns, decision=decision, currdose = currdose, 
-              nextdose=nextdose, overtox=overtox)
+              nextdose=nextdose, overtox=overtox, toxprob=cover.prob)
   class(out) <- c("cfo_decision", "cfo")
   return(out)
 }

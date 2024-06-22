@@ -140,8 +140,6 @@ CFO2d.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=tar
     return(OR)
   }
   
-  
-  
   All.OR.table <- function(phi, n1, n2, type, alp.prior, bet.prior){
     ret.mat <- matrix(rep(0, (n1+1)*(n2+1)), nrow=n1+1)
     for (y1cur in 0:n1){
@@ -270,6 +268,20 @@ CFO2d.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=tar
     }
   }
   
+  cover.prob=matrix(0,3,3)
+  for (i in 1:3){
+    for (j in 1:3){
+      cy <- cys[i,j]
+      cn <- cns[i,j]
+      if (is.na(cn)){
+        cover.prob[i,j] <- NA
+      }else{
+        cover.prob[i,j] <- post.prob.fn(target, cy, cn, alp.prior, bet.prior)
+      }
+    }
+  } 
+  
+  
   if (overdose.fn(target, cutoff.eli, cys[2,2], cns[2,2], prior.para)){
     cover.doses[2,2] <- 1
     overtox <- currdose
@@ -303,7 +315,7 @@ CFO2d.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=tar
   if (cutoff.eli != early.stop) {
     if (currdose==c(1,1) & overdose.fn(target, early.stop, cys[1,1], cns[1,1], prior.para)){
       cover.doses[1,1] <- 1
-      out <- list(target=target, cys=cys, cns=cns, decision="stop", currdose = currdose, nextdose = c(99,99), overtox = c(1,1))
+      out <- list(target=target, cys=cys, cns=cns, decision="stop", currdose = currdose, nextdose = c(99,99), overtox = c(1,1), toxprob=cover.prob)
       class(out) <- "cfo"
       return(out)
     }
@@ -389,7 +401,7 @@ CFO2d.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=tar
   decision_values <- c("de-escalation", "stay", "escalation")
   decision <- decision_values[match(c(cidx.A, cidx.B), c(-1, 0, 1))]
   out <- list(target=target, cys=cys, cns=cns, decision=decision, currdose = currdose, 
-              nextdose = nextdose, overtox = overtox)
+              nextdose = nextdose, overtox = overtox, toxprob=cover.prob)
   class(out) <- c("cfo_decision", "cfo")
   return(out)
 }

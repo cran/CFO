@@ -63,7 +63,7 @@ according to the early stopping rule. Upon the predefined maximum sample size is
 level is over-toxicity, the experiment is concluded, and the MTD is determined using isotonic regression.
 }
 \examples{
-target <- 0.2; ncohort <- 33; cohortsize <- 3; init.level <- 1
+target <- 0.2; ncohort <- 12; cohortsize <- 3; init.level <- 1
 p.true <- c(0.01, 0.07, 0.20, 0.35, 0.50, 0.65, 0.80)
 ### find the MTD for a single CFO simulation
 CFOtrial <- CFO.simu(design = 'CFO', target, p.true, init.level, ncohort, cohortsize, seed = 1)

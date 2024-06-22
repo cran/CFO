@@ -41,6 +41,9 @@ terminated due to early stopping.
 \item overtox: the situation regarding which positions experience over-toxicity. The dose level indicated
 by \code{overtox} and all the dose levels above experience over-toxicity. \code{overtox = NA} signifies that
 the occurrence of over-toxicity did not happen.
+\item toxprob: the expected toxicity probability, \eqn{Pr(p_k > \phi | x_k, m_k)}, at the left, current, and
+right dose levels, where \eqn{p_k}, \eqn{x_k}, and \eqn{m_k} is the dose-limiting toxicity (DLT) rate, the
+numbers of observed DLTs, and the numbers of patients at dose level \eqn{k}.
 }
 }
 \description{
@@ -59,8 +62,8 @@ toxicity at the current dose level, we exclude that dose level and those higher 
 the trial will be terminated according to the early stopping rule.
 }
 \note{
-When the current dose level is the lowest or highest (i.e., at the boundary), the parts in \code{cys} and
-\code{cns} where there is no data are filled with \code{NA}. \cr
+When the current dose level is the lowest or highest (i.e., at the boundary), the parts in \code{cys},
+\code{cns}, and \code{toxprob} where there is no data are filled with \code{NA}. \cr
 The dose level indicated by \code{overtox} and all the dose levels above experience over-toxicity, and these dose levels will be eliminated.
 }
 \examples{

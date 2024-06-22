@@ -41,6 +41,9 @@ terminated due to early stopping.
 \item overtox: the situation regarding which position experiences over-toxicity. The dose level indicated by
 \code{overtox} and all the dose levels above experience over-toxicity. \code{overtox = NA} signifies that the
 occurrence of over-toxicity did not happen.
+\item toxprob: the expected toxicity probability, \eqn{Pr(p_k > \phi | x_k, m_k)}, at all dose
+levels, where \eqn{p_k}, \eqn{x_k}, and \eqn{m_k} is the dose-limiting toxicity (DLT) rate, the
+numbers of observed DLTs, and the numbers of patients at dose level \eqn{k}.
 }
 }
 \description{

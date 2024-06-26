@@ -1,4 +1,4 @@
-c6560ea385170901f45b0de693ad654c *DESCRIPTION
+374415558cb4e5dff8e08d67769b6918 *DESCRIPTION
 56fb6da65dbc221388516c8b801a1e69 *NAMESPACE
 f19cd038223a5b98c4b59cc484001329 *R/CFO.next.R
 6f8d31da35d6a68b6eabb200d976ee1a *R/CFO.oc.R
@@ -9,7 +9,7 @@ ad736e33911ad4e4d97a32330f4f224c *R/CFO2d.oc.R
 dd49dfc833e80ff4e6e624ea84b2de1f *R/CFO2d.selectmtd.R
 e74adb1965eb4e25ef5f7040f4dff371 *R/CFO2d.simu.R
 2d558e18abda5a638a4b3d3637e0c4ea *R/aCFO.next.R
-5ad87e65735999ba3e1b3affc98fea4d *R/lateonset.next.R
+e7cedebf9c5118367f13c77724fed87a *R/lateonset.next.R
 035fa11235369179dfde12d37dccf2af *R/lateonset.simu.R
 60928733da5bad38fc378ce1c8403d32 *R/plot.cfo.R
 5610f84657a6e8e620f0cf235dd5bbf8 *R/print.cfo.R
@@ -23,7 +23,7 @@ c847b3ebb0eadefaad6284c552fdc49f *man/CFO2d.oc.Rd
 52e6492213e30bbd3ee35579d85b2129 *man/CFO2d.selectmtd.Rd
 0f641217c6dc559b66635c768fdf45e5 *man/CFO2d.simu.Rd
 84c1b3f7364b68caa590a645e1044d42 *man/aCFO.next.Rd
-54238648eb9c6ebfc5ba54093e435250 *man/lateonset.next.Rd
+d297a70464fb514f48f76440b8b54113 *man/lateonset.next.Rd
 8d4c341fdeb665ee4aaa50f6b56067b7 *man/lateonset.simu.Rd
 bd8f0df878a4d666697b10d9b14c8b0f *man/plot.cfo.Rd
 f8d528a1c0f32414084143403e0cacd4 *man/print.cfo.Rd

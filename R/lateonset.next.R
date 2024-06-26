@@ -53,6 +53,9 @@
 #'   occurrence of over-toxicity did not happen.
 #'   \item over.doses: a vector indicating whether the dose level (from the first to last dose level) is over-toxic 
 #'   or not (1 for yes).
+#'   \item toxprob: the expected toxicity probability, \eqn{Pr(p_k > \phi | x_k, m_k)}, at all dose
+#'   levels, where \eqn{p_k}, \eqn{x_k}, and \eqn{m_k} is the dose-limiting toxicity (DLT) rate, the 
+#'   numbers of observed DLTs, and the numbers of patients at dose level \eqn{k}.
 #' }
 #' 
 #' @author Jialu Fang, Wenliang Wang, and Guosheng Yin 
@@ -279,8 +282,6 @@ lateonset.next <- function(design, target, p.true, currdose, assess.window, ente
   }
   
   over.doses <- rep(0, ndose)
-  
-  
   for (i in 1:ndose){
     cy <- ays[i]
     cn <- ans[i]
@@ -289,6 +290,13 @@ lateonset.next <- function(design, target, p.true, currdose, assess.window, ente
       over.doses[i:ndose] <- 1
       break()
     }
+  }
+  
+  tover.prob <- rep(0, ndose)
+  for (i in 1:ndose){
+    cy <- ays[i]
+    cn <- ans[i]
+    tover.prob[i] <- post.prob.fn(target, cy, cn, alp.prior, bet.prior)
   }
 
   if (cutoff.eli != early.stop) {
@@ -322,7 +330,7 @@ lateonset.next <- function(design, target, p.true, currdose, assess.window, ente
   overtox <- res$overtox
 
   out <- list(target=target, ays=ays, ans=ans, decision=decision, currdose = currdose, 
-              nextdose=nextdose, overtox=overtox, over.doses=over.doses)
+              nextdose=nextdose, overtox=overtox, over.doses=over.doses, toxprob=tover.prob)
   class(out) <- c("cfo_decision", "cfo")
   return(out)
 }

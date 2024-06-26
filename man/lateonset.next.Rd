@@ -53,6 +53,9 @@ movement directions, and \code{stop} indicates stopping the experiment.
 occurrence of over-toxicity did not happen.
 \item over.doses: a vector indicating whether the dose level (from the first to last dose level) is over-toxic
 or not (1 for yes).
+\item toxprob: the expected toxicity probability, \eqn{Pr(p_k > \phi | x_k, m_k)}, at all dose
+levels, where \eqn{p_k}, \eqn{x_k}, and \eqn{m_k} is the dose-limiting toxicity (DLT) rate, the
+numbers of observed DLTs, and the numbers of patients at dose level \eqn{k}.
 }
 }
 \description{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/CFO2d.selectmtd.R
 \name{CFO2d.selectmtd}
 \alias{CFO2d.selectmtd}
-\title{Select the maximum tolerated dose (MTD) for the real drug combination trial}
+\title{Select the maximum tolerated dose (MTD) for the real drug combination trials}
 \usage{
 CFO2d.selectmtd(target, npts, ntox, 
        prior.para = list(alp.prior = target, bet.prior = 1 - target), 
@@ -39,7 +39,7 @@ generally works well.}
 }
 }
 \description{
-Select the maximum tolerated dose (MTD) when the real drug combination trial is completed
+Select the maximum tolerated dose (MTD) when the real drug combination trials is completed
 }
 \details{
 \code{CFO2d.selectmtd()} selects the MTD based on isotonic estimates of toxicity
@@ -81,5 +81,5 @@ Bril G, Dykstra R, Pillers C, Robertson T (1984). Algorithm AS 206: Isotonic reg
 \emph{Journal of the Royal Statistical Society. Series C (Applied Statistics)}, 33(3), 352–357.
 }
 \author{
-Jialu Fang, Wenliang Wang, and Guosheng Yin
+Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
 }

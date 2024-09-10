@@ -2,7 +2,7 @@
 % Please edit documentation in R/CFO2d.simu.R
 \name{CFO2d.simu}
 \alias{CFO2d.simu}
-\title{Conduct one simulation using the two-dimensional calibration-free odds (2dCFO) design.}
+\title{Conduct one simulation using the two-dimensional calibration-free odds (2dCFO) design for phase I trials.}
 \usage{
 CFO2d.simu(target, p.true, init.level = c(1,1), ncohort, cohortsize, 
                  prior.para = list(alp.prior = target, bet.prior = 1 - target),
@@ -36,10 +36,11 @@ The \code{CFO2d.simu()} function returns a list with the following components:
 \itemize{
 \item target: the target DLT rate.
 \item MTD: a vector of length 2 representing the recommended dose level. \code{MTD = (99, 99)} indicates that this trial is terminated due to early stopping.
-\item correct: a binary indicator of whether the recommended dose level matches the target DLT rate (1 for yes).
+\item correct: a binary indicator of whether the recommended dose level matches the correct MTD (1 for yes).
+The correct MTD is the dose level at which the true DLT rate is closest to the target DLT rate.
 \item npatients: a matrix of the number of patients allocated to different doses.
 \item ntox: a matrix of the number of DLT observed for different doses.
-\item npercent: the percentage of patients assigned to the target DLT rate.
+\item npercent: the percentage of patients assigned to the correct MTD.
 \item over.doses: a matrix indicating whether each dose is overdosed or not (1 for yes).
 \item cohortdose: the dose combination assigned to each cohort.
 \item ptoxic: the percentage of subjects assigned to dose levels with a DLT rate greater than the target.
@@ -49,7 +50,7 @@ The \code{CFO2d.simu()} function returns a list with the following components:
 }
 }
 \description{
-In the 2dCFO design, the function is used to conduct one single simulation and find the maximum tolerated dose (MTD).
+In the 2dCFO design for phase I trials, the function is used to conduct one single simulation and find the maximum tolerated dose (MTD).
 }
 \details{
 The \code{CFO2d.simu()} function simulates the operating characteristics of the 2dCFO design
@@ -75,5 +76,5 @@ Wang W, Jin H, Zhang Y, Yin G (2023). Two-dimensional calibration-free odds (2dC
 design for phase I drug-combination trials. \emph{Frontiers in Oncology}, 13, 1294258.
 }
 \author{
-Jialu Fang, Wenliang Wang, and Guosheng Yin
+Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
 }

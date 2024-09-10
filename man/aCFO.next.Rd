@@ -2,7 +2,7 @@
 % Please edit documentation in R/aCFO.next.R
 \name{aCFO.next}
 \alias{aCFO.next}
-\title{Determination of the dose level for next cohort in the accumulative calibration-free odds (aCFO) design}
+\title{Determination of the dose level for next cohort in the accumulative calibration-free odds (aCFO) design for phase I trials}
 \usage{
 aCFO.next(target, ays, ans, currdose, 
        prior.para = list(alp.prior = target, bet.prior = 1 - target),
@@ -47,7 +47,7 @@ numbers of observed DLTs, and the numbers of patients at dose level \eqn{k}.
 }
 }
 \description{
-In the aCFO design, the function is used to determine the dose movement based on the toxicity outcomes of the enrolled cohorts.
+In the aCFO design for phase I trials, the function is used to determine the dose movement based on the toxicity outcomes of the enrolled cohorts.
 }
 \details{
 The aCFO design is an extension of the CFO design. It integrates dose information from all positions (ranging
@@ -86,5 +86,5 @@ Fang J, Yin G (2024). Fractional accumulative calibration‐free odds (f‐aCFO)
 in phase I clinical trials. \emph{Statistics in Medicine}.
 }
 \author{
-Jialu Fang, Wenliang Wang, and Guosheng Yin
+Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/CFO.next.R
 \name{CFO.next}
 \alias{CFO.next}
-\title{Determination of the dose level for next cohort in the calibration-free odds (CFO) design}
+\title{Determination of the dose level for next cohort in the calibration-free odds (CFO) design for phase I trials}
 \usage{
 CFO.next(target, cys, cns, currdose, 
        prior.para = list(alp.prior = target, bet.prior = 1 - target),
@@ -47,7 +47,7 @@ numbers of observed DLTs, and the numbers of patients at dose level \eqn{k}.
 }
 }
 \description{
-In the CFO design, the function is used to determine the dose movement based on the toxicity outcomes of the enrolled cohorts.
+In the CFO design for phase I trials, the function is used to determine the dose movement based on the toxicity outcomes of the enrolled cohorts.
 }
 \details{
 The CFO design determines the dose level for the next cohort by assessing evidence from the current
@@ -86,5 +86,5 @@ Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical t
 \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066.
 }
 \author{
-Jialu Fang, Wenliang Wang, and Guosheng Yin
+Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
 }

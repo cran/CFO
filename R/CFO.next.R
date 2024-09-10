@@ -1,7 +1,7 @@
 #' 
-#' Determination of the dose level for next cohort in the calibration-free odds (CFO) design
+#' Determination of the dose level for next cohort in the calibration-free odds (CFO) design for phase I trials
 #' 
-#' In the CFO design, the function is used to determine the dose movement based on the toxicity outcomes of the enrolled cohorts.
+#' In the CFO design for phase I trials, the function is used to determine the dose movement based on the toxicity outcomes of the enrolled cohorts.
 #'
 #' @usage CFO.next(target, cys, cns, currdose, 
 #'        prior.para = list(alp.prior = target, bet.prior = 1 - target),
@@ -51,7 +51,7 @@
 #'   right dose levels, where \eqn{p_k}, \eqn{x_k}, and \eqn{m_k} is the dose-limiting toxicity (DLT) rate, the 
 #'   numbers of observed DLTs, and the numbers of patients at dose level \eqn{k}.
 #' }
-#' @author Jialu Fang, Wenliang Wang, and Guosheng Yin
+#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
 #' 
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
 #'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066.

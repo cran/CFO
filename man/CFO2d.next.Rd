@@ -2,7 +2,7 @@
 % Please edit documentation in R/CFO2d.next.R
 \name{CFO2d.next}
 \alias{CFO2d.next}
-\title{Determinate the dose level for the next cohort in the two-dimensional calibration-free odds (2dCFO) design.}
+\title{Determinate the dose level for the next cohort in the two-dimensional calibration-free odds (2dCFO) design for phase I trials.}
 \usage{
 CFO2d.next(target, cys, cns, currdose, 
        prior.para = list(alp.prior = target, bet.prior = 1 - target), 
@@ -46,7 +46,7 @@ occurrence of over-toxicity did not happen.
 }
 }
 \description{
-This function is used to determine the next dose level for the next cohort in the 2dCFO design.
+In the 2dCFO design for phase I trials, the function is used to determine the dose movement based on the toxicity outcomes of the enrolled cohorts.
 }
 \details{
 In the 2dCFO design, decision-making within the two-dimensional toxicity probability space is conducted by performing two independent one-dimensional
@@ -78,5 +78,5 @@ Wang W, Jin H, Zhang Y, Yin G (2023). Two-dimensional calibration-free odds (2dC
 design for phase I drug-combination trials. \emph{Frontiers in Oncology}, 13, 1294258.
 }
 \author{
-Jialu Fang, Wenliang Wang, and Guosheng Yin
+Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
 }

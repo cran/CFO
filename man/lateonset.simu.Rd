@@ -2,7 +2,7 @@
 % Please edit documentation in R/lateonset.simu.R
 \name{lateonset.simu}
 \alias{lateonset.simu}
-\title{Conduct one simulation using the calibration-free odds type (CFO-type) design with late-onset toxicity.}
+\title{Conduct one simulation using the calibration-free odds type (CFO-type) design with late-onset toxicity for phase I trials.}
 \usage{
 lateonset.simu(design, target, p.true, init.level = 1, ncohort, cohortsize,
        assess.window, tte.para, accrual.rate, accrual.dist,  
@@ -54,10 +54,10 @@ The \code{lateonset.simu()} function returns a list object comprising the follow
 \itemize{
 \item target: the target DLT rate.
 \item MTD: the selected MTD. \code{MTD = 99} indicates that this trial is terminated due to early stopping.
-\item correct: a binary indicator of whether the recommended dose level matches the target DLT rate (1 for yes).
+\item correct: a binary indicator of whether the recommended dose level matches the correct MTD (1 for yes).
+The correct MTD is the dose level at which the true DLT rate is closest to the target DLT rate.
 \item npatients: the total number of patients allocated to all dose levels
 \item ntox: the total number of DLTs observed for all dose levels.
-\item npercent: the percentage of subjects assigned to the target DLT rate.
 \item over.doses: a vector indicating whether each dose is overdosed or not (1 for yes).
 \item cohortdose: a vector including the dose level assigned to each cohort.
 \item ptoxic: the percentage of subjects assigned to dose levels with a DLT rate greater than the target.
@@ -71,8 +71,9 @@ The \code{lateonset.simu()} function returns a list object comprising the follow
 }
 }
 \description{
-The function is used to conduct one single simulation and find the maximum tolerated dose (MTD) for the CFO-type designs with late-onset toxicities,
-specifically, including time-to-event CFO (TITE-CFO) design, fractional CFO (fCFO) design, benchmark CFO design,
+Based on the toxicity outcomes of the enrolled cohorts, the function is used to conduct one single simulation and find the
+maximum tolerated dose (MTD) for the CFO-type designs with late-onset toxicities for phase I trials, specifically,
+including time-to-event CFO (TITE-CFO) design, fractional CFO (fCFO) design, benchmark CFO design,
 time-to-event accumulative CFO (TITE-aCFO) design, fractional accumulative CFO (f-aCFO) design and benchmark aCFO design.
 }
 \note{
@@ -115,5 +116,5 @@ Fang J, Yin G (2024). Fractional accumulative calibration‐free odds (f‐aCFO)
 in phase I clinical trials. \emph{Statistics in Medicine}.
 }
 \author{
-Jialu Fang, Wenliang Wang, and Guosheng Yin
+Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
 }

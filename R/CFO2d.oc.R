@@ -1,6 +1,6 @@
-#' Generate operating characteristics of drug-combination trials in multiple simulations
+#' Generate operating characteristics of phase I drug-combination trials in multiple simulations
 #' 
-#' This function is used to conduct multiple simulations of drug-combination trials and obtain relevant the operating characteristics.
+#' Based on the toxicity outcomes, this function is used to conduct multiple simulations of phase I drug-combination trials and obtain relevant the operating characteristics.
 #'
 #' @usage CFO2d.oc(nsimu = 1000, target, p.true, init.level = c(1,1), ncohort, cohortsize,
 #'                prior.para = list(alp.prior = target, bet.prior = 1 - target), 
@@ -40,13 +40,13 @@
 #'   \item simu.setup: the parameters for the simulation set-up.
 #' }
 #' 
-#' @author Jialu Fang, Wenliang Wang, and Guosheng Yin
+#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
 #' 
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
 #'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
 #'             Wang W, Jin H, Zhang Y, Yin G (2023). Two-dimensional calibration-free odds (2dCFO)
 #'             design for phase I drug-combination trials. \emph{Frontiers in Oncology}, 13, 1294258.
-#' 
+#' @import pbapply
 #' @export
 #' @examples
 #' ## Simulate a two-dimensional dose-finding trial with 20 cohorts of size 3 for 10 replications.
@@ -65,7 +65,7 @@ CFO2d.oc <- function(nsimu = 1000, target, p.true, init.level = c(1,1), ncohort,
                      cutoff.eli = 0.95, early.stop = 0.95, seeds = NULL){
   
   # Run the CFO2d.simu function nsimu times using lapply
-  results <- lapply(1:nsimu, function(i) {
+  results <- pblapply(1:nsimu, function(i) {
     CFO2d.simu(target, p.true, init.level, ncohort, cohortsize, prior.para, cutoff.eli=cutoff.eli, early.stop=early.stop, seed = seeds[i])
   })
   

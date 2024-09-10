@@ -1,6 +1,6 @@
-#' Determinate the dose level for the next cohort in the two-dimensional calibration-free odds (2dCFO) design.
+#' Determinate the dose level for the next cohort in the two-dimensional calibration-free odds (2dCFO) design for phase I trials.
 #'
-#' This function is used to determine the next dose level for the next cohort in the 2dCFO design.
+#' In the 2dCFO design for phase I trials, the function is used to determine the dose movement based on the toxicity outcomes of the enrolled cohorts.
 #'
 #' @usage CFO2d.next(target, cys, cns, currdose, 
 #'        prior.para = list(alp.prior = target, bet.prior = 1 - target), 
@@ -41,7 +41,7 @@
 #'   occurrence of over-toxicity did not happen.
 #' }
 #' 
-#' @author Jialu Fang, Wenliang Wang, and Guosheng Yin
+#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
 #' 
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
 #'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr

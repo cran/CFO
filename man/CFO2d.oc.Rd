@@ -2,7 +2,7 @@
 % Please edit documentation in R/CFO2d.oc.R
 \name{CFO2d.oc}
 \alias{CFO2d.oc}
-\title{Generate operating characteristics of drug-combination trials in multiple simulations}
+\title{Generate operating characteristics of phase I drug-combination trials in multiple simulations}
 \usage{
 CFO2d.oc(nsimu = 1000, target, p.true, init.level = c(1,1), ncohort, cohortsize,
                prior.para = list(alp.prior = target, bet.prior = 1 - target), 
@@ -51,7 +51,7 @@ characteristics of the design: \cr
 }
 }
 \description{
-This function is used to conduct multiple simulations of drug-combination trials and obtain relevant the operating characteristics.
+Based on the toxicity outcomes, this function is used to conduct multiple simulations of phase I drug-combination trials and obtain relevant the operating characteristics.
 }
 \note{
 In the example, we set \code{nsimu = 10} for testing time considerations. In reality, \code{nsimu}
@@ -76,5 +76,5 @@ Wang W, Jin H, Zhang Y, Yin G (2023). Two-dimensional calibration-free odds (2dC
 design for phase I drug-combination trials. \emph{Frontiers in Oncology}, 13, 1294258.
 }
 \author{
-Jialu Fang, Wenliang Wang, and Guosheng Yin
+Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
 }

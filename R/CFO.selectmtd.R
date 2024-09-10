@@ -1,7 +1,7 @@
 #'
-#' Select the maximum tolerated dose (MTD) for the real single-drug trial
+#' Select the maximum tolerated dose (MTD) for the real single-drug trials
 #'
-#' Select the maximum tolerated dose (MTD) when the real single-drug trial is completed
+#' Select the maximum tolerated dose (MTD) when the real single-drug trials is completed
 #'
 #' @usage CFO.selectmtd(target, npts, ntox, 
 #'        prior.para = list(alp.prior = target, bet.prior = 1 - target), 
@@ -46,7 +46,7 @@
 #'        the MTD after the completion of the trial using the CFO-type design.
 #'
 #'
-#' @author Jialu Fang, Wenliang Wang, and Guosheng Yin
+#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
 #'
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
 #'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr

@@ -81,9 +81,31 @@ ntox <- matrix(c(0, 0, 2, 0, 0, 0, 2, 7, 0, 0, 0, 2, 0, 0, 0), nrow = 3, ncol = 
 npts <- matrix(c(3, 0, 12, 0, 0, 3, 12, 24, 0, 0, 3, 3, 0, 0, 0), nrow = 3, ncol = 5, byrow = TRUE)
 selmtd <- CFO2d.selectmtd(target=0.3, npts=npts, ntox=ntox)
 plot(selmtd)
+
+## summarize the object returned by CFOeff.next()
+decision <- CFOeff.next(target=0.4,txs=c(3,1,7,11,26),tys=c(0,0,0,0,6),
+              tns= c(6, 3, 12, 17, 36), currdose = 3, mineff = 0.3)
+plot(decision)
+
+## summarize the object returned by CFOeff.simu()
+target <- 0.30; mineff <- 0.30
+prior.para = list(alp.prior = target, bet.prior = 1 - target, 
+                  alp.prior.eff = 0.5, bet.prior.eff = 0.5)
+p.true=c(0.05, 0.07, 0.1, 0.12, 0.16)
+pE.true=c(0.35, 0.45, 0.5, 0.55, 0.75)
+result <- CFOeff.simu(target, p.true, pE.true, ncohort, init.level, cohortsize,
+                       prior.para, mineff = mineff, seed = 1)
+plot(result)
+
+## summarize the object returned by CFOeff.oc()
+nsimu = 10
+result <- CFOeff.oc(target, p.true, pE.true, prior.para, 
+          init.level,cohortsize, ncohort, nsimu, mineff = mineff, seeds = 1:nsimu)
+plot(result)
+
 }
 
 }
 \author{
-Jialu Fang, Wenliang Wang, and Guosheng Yin
+Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
 }

@@ -1,7 +1,8 @@
-#' Conduct one simulation using the calibration-free odds type (CFO-type) design with late-onset toxicity.
+#' Conduct one simulation using the calibration-free odds type (CFO-type) design with late-onset toxicity for phase I trials.
 #'
-#' The function is used to conduct one single simulation and find the maximum tolerated dose (MTD) for the CFO-type designs with late-onset toxicities, 
-#' specifically, including time-to-event CFO (TITE-CFO) design, fractional CFO (fCFO) design, benchmark CFO design, 
+#' Based on the toxicity outcomes of the enrolled cohorts, the function is used to conduct one single simulation and find the 
+#' maximum tolerated dose (MTD) for the CFO-type designs with late-onset toxicities for phase I trials, specifically, 
+#' including time-to-event CFO (TITE-CFO) design, fractional CFO (fCFO) design, benchmark CFO design, 
 #' time-to-event accumulative CFO (TITE-aCFO) design, fractional accumulative CFO (f-aCFO) design and benchmark aCFO design.
 #'
 #' @usage lateonset.simu(design, target, p.true, init.level = 1, ncohort, cohortsize,
@@ -42,10 +43,10 @@
 #' \itemize{
 #' \item target: the target DLT rate.
 #' \item MTD: the selected MTD. \code{MTD = 99} indicates that this trial is terminated due to early stopping.
-#' \item correct: a binary indicator of whether the recommended dose level matches the target DLT rate (1 for yes).
+#' \item correct: a binary indicator of whether the recommended dose level matches the correct MTD (1 for yes).
+#'       The correct MTD is the dose level at which the true DLT rate is closest to the target DLT rate.
 #' \item npatients: the total number of patients allocated to all dose levels
 #' \item ntox: the total number of DLTs observed for all dose levels.
-#' \item npercent: the percentage of subjects assigned to the target DLT rate.
 #' \item over.doses: a vector indicating whether each dose is overdosed or not (1 for yes).
 #' \item cohortdose: a vector including the dose level assigned to each cohort.
 #' \item ptoxic: the percentage of subjects assigned to dose levels with a DLT rate greater than the target.
@@ -59,7 +60,7 @@
 #' }
 #' 
 #'         
-#' @author Jialu Fang, Wenliang Wang, and Guosheng Yin
+#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
 #' 
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials. 
 #'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
@@ -134,6 +135,14 @@ lateonset.simu <- function(design, target, p.true, init.level=1, ncohort, cohort
     return(list(tox=tox, t.tox=t.tox, ntox.st=ntox.st));
   }
   
+  MTD.level <- function(phi, p.true){
+    if (p.true[1]>phi+0.1){
+      MTD <- 99
+      return(MTD)
+    }
+    MTD <- which.min(abs(phi - p.true))
+    return(MTD)
+  }
   ###############################################################################
   ############################MAIN DUNCTION######################################
   ############################################################################### 
@@ -227,15 +236,15 @@ lateonset.simu <- function(design, target, p.true, init.level=1, ncohort, cohort
     MTD <- 99
   }
   
+  tmtd <- MTD.level(target, p.true)
   correct <- 0
-  if (MTD == target){
+  if (MTD == tmtd){
     correct <- 1
   }
   
-  npercent <- ans[which(p.true == target)]/(ncohort*cohortsize)
   ptoxic <- sum(ans[which(p.true > target)])/(ncohort*cohortsize)
   
-  out <- list(target=target, MTD=MTD, correct=correct, npatients=ans, ntox=ays, npercent=npercent, 
+  out <- list(target=target, MTD=MTD, correct=correct, npatients=ans, ntox=ays, 
               over.doses=over.doses, cohortdose=doselist, ptoxic=ptoxic, patientDLT = dlts,
               sumDLT=sum(dlts), earlystop=earlystop,
               totaltime=assess.t[length(assess.t)], entertimes=enter.times, DLTtimes=dlt.times)

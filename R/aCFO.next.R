@@ -1,6 +1,6 @@
-#' Determination of the dose level for next cohort in the accumulative calibration-free odds (aCFO) design
+#' Determination of the dose level for next cohort in the accumulative calibration-free odds (aCFO) design for phase I trials
 #' 
-#' In the aCFO design, the function is used to determine the dose movement based on the toxicity outcomes of the enrolled cohorts.
+#' In the aCFO design for phase I trials, the function is used to determine the dose movement based on the toxicity outcomes of the enrolled cohorts.
 #'
 #' @usage aCFO.next(target, ays, ans, currdose, 
 #'        prior.para = list(alp.prior = target, bet.prior = 1 - target),
@@ -47,7 +47,7 @@
 #'   numbers of observed DLTs, and the numbers of patients at dose level \eqn{k}.
 #' }
 #'  
-#' @author Jialu Fang, Wenliang Wang, and Guosheng Yin 
+#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin 
 #' 
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
 #'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr

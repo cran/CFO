@@ -1,6 +1,6 @@
-#' Conduct one simulation using the two-dimensional calibration-free odds (2dCFO) design.
+#' Conduct one simulation using the two-dimensional calibration-free odds (2dCFO) design for phase I trials.
 #'
-#' In the 2dCFO design, the function is used to conduct one single simulation and find the maximum tolerated dose (MTD).
+#' In the 2dCFO design for phase I trials, the function is used to conduct one single simulation and find the maximum tolerated dose (MTD).
 #'
 #' @usage CFO2d.simu(target, p.true, init.level = c(1,1), ncohort, cohortsize, 
 #'                  prior.para = list(alp.prior = target, bet.prior = 1 - target),
@@ -30,10 +30,11 @@
 #' \itemize{
 #'   \item target: the target DLT rate.
 #'   \item MTD: a vector of length 2 representing the recommended dose level. \code{MTD = (99, 99)} indicates that this trial is terminated due to early stopping.
-#'   \item correct: a binary indicator of whether the recommended dose level matches the target DLT rate (1 for yes).
+#'   \item correct: a binary indicator of whether the recommended dose level matches the correct MTD (1 for yes).
+#'         The correct MTD is the dose level at which the true DLT rate is closest to the target DLT rate.
 #'   \item npatients: a matrix of the number of patients allocated to different doses.
 #'   \item ntox: a matrix of the number of DLT observed for different doses.
-#'   \item npercent: the percentage of patients assigned to the target DLT rate.
+#'   \item npercent: the percentage of patients assigned to the correct MTD.
 #'   \item over.doses: a matrix indicating whether each dose is overdosed or not (1 for yes).
 #'   \item cohortdose: the dose combination assigned to each cohort.
 #'   \item ptoxic: the percentage of subjects assigned to dose levels with a DLT rate greater than the target.
@@ -42,7 +43,7 @@
 #'   \item earlystop: a binary indicator of whether the trial is early stopped (1 for yes).
 #' }
 #' 
-#' @author Jialu Fang, Wenliang Wang, and Guosheng Yin
+#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
 #' 
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
 #'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
@@ -106,6 +107,16 @@ CFO2d.simu <- function(target, p.true, init.level=c(1,1), ncohort, cohortsize,
     alp <- alp.prior + y 
     bet <- bet.prior + n - y
     1 - pbeta(phi, alp, bet)
+  }
+  
+  MTD.level <- function(phi, p.true){
+    if (p.true[1,1]>phi+0.1){
+      MTD <- 99
+      return(MTD)
+    }
+    min_value <- min(abs(phi - p.true))
+    MTD <- which(abs(phi - p.true) == min_value, arr.ind = TRUE)
+    return(MTD)
   }
   
   for (i in 1:ncohort){
@@ -200,19 +211,20 @@ CFO2d.simu <- function(target, p.true, init.level=c(1,1), ncohort, cohortsize,
     MTD <- c(99,99)
   }
   
+  tmtd <- MTD.level(target, p.true)
   correct <- 0
   if(MTD[1]>ndose.A | MTD[2]>ndose.B){
     correct <- 0
   } else if (length(MTD)!=2){
     correct <- 0
-  }else if (p.true[MTD[1],MTD[2]]==target){
+  }else if (any(apply(tmtd, 1, function(x) all(x == MTD)))){
     correct <- 1
   }
   
   npercent <- 0
   for (j in 1:ndose.A) {
     for (k in 1:ndose.B) {
-      if (p.true[j,k]==target){
+      if (any(apply(tmtd, 1, function(x) all(x == c(j,k))))){
         npercent <- npercent + ans[j,k]
       }
     }

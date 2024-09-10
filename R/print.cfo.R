@@ -11,7 +11,7 @@
 #'
 #' @return \code{print()} prints the objects returned by other functions.
 #'
-#' @author Jialu Fang, Wenliang Wang, and Guosheng Yin
+#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
 #' 
 #' @note In the example, we set \code{nsimu = 5} for testing time considerations. In reality, \code{nsimu} 
 #'    is typically set to 5000 to ensure the accuracy of the results.
@@ -95,6 +95,27 @@
 #' CFO2doc <- CFO2d.oc(nsimu = 5, target, p.true, init.level = c(1,1), ncohort, cohortsize, 
 #'                     seeds = 1:5)
 #' print(CFO2doc)
+#' 
+#' ## summarize the object returned by CFOeff.next()
+#' decision <- CFOeff.next(target=0.4,txs=c(3,1,7,11,26),tys=c(0,0,0,0,6),
+#'               tns= c(6, 3, 12, 17, 36), currdose = 3, mineff = 0.3)
+#' print(decision)
+#' 
+#' ## summarize the object returned by CFOeff.simu()
+#' target <- 0.30; mineff <- 0.30
+#' prior.para = list(alp.prior = target, bet.prior = 1 - target, 
+#'                   alp.prior.eff = 0.5, bet.prior.eff = 0.5)
+#' p.true=c(0.05, 0.07, 0.1, 0.12, 0.16)
+#' pE.true=c(0.35, 0.45, 0.5, 0.55, 0.75)
+#' result <- CFOeff.simu(target, p.true, pE.true, ncohort, init.level, cohortsize,
+#'                        prior.para, mineff = mineff, seed = 1)
+#' print(result)
+#' 
+#' ## summarize the object returned by CFOeff.oc()
+#' nsimu = 10
+#' result <- CFOeff.oc(target, p.true, pE.true, prior.para, 
+#'           init.level,cohortsize, ncohort, nsimu, mineff = mineff, seeds = 1:nsimu)
+#' print(result)
 #' }
 #'
 #' @export

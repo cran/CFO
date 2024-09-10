@@ -1,6 +1,6 @@
-#' Select the maximum tolerated dose (MTD) for the real drug combination trial
+#' Select the maximum tolerated dose (MTD) for the real drug combination trials
 #'
-#' Select the maximum tolerated dose (MTD) when the real drug combination trial is completed
+#' Select the maximum tolerated dose (MTD) when the real drug combination trials is completed
 #'
 #' @usage CFO2d.selectmtd(target, npts, ntox, 
 #'        prior.para = list(alp.prior = target, bet.prior = 1 - target), 
@@ -43,7 +43,7 @@
 #' }
 #'
 #'
-#' @author Jialu Fang, Wenliang Wang, and Guosheng Yin
+#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
 #'
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
 #'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr

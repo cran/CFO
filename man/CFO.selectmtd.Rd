@@ -2,7 +2,7 @@
 % Please edit documentation in R/CFO.selectmtd.R
 \name{CFO.selectmtd}
 \alias{CFO.selectmtd}
-\title{Select the maximum tolerated dose (MTD) for the real single-drug trial}
+\title{Select the maximum tolerated dose (MTD) for the real single-drug trials}
 \usage{
 CFO.selectmtd(target, npts, ntox, 
        prior.para = list(alp.prior = target, bet.prior = 1 - target), 
@@ -39,7 +39,7 @@ generally works well.}
 }
 }
 \description{
-Select the maximum tolerated dose (MTD) when the real single-drug trial is completed
+Select the maximum tolerated dose (MTD) when the real single-drug trials is completed
 }
 \details{
 \code{CFO.selectmtd()} selects the MTD based on isotonic estimates of toxicity
@@ -76,5 +76,5 @@ Fang J, Yin G (2024). Fractional accumulative calibration‐free odds (f‐aCFO)
 in phase I clinical trials. \emph{Statistics in Medicine}.
 }
 \author{
-Jialu Fang, Wenliang Wang, and Guosheng Yin
+Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
 }

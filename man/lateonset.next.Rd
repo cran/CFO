@@ -2,7 +2,7 @@
 % Please edit documentation in R/lateonset.next.R
 \name{lateonset.next}
 \alias{lateonset.next}
-\title{Determination of the dose level for next cohort in the calibration-free odds type (CFO-type) design with late-onset toxicity}
+\title{Determination of the dose level for next cohort in the calibration-free odds type (CFO-type) design with late-onset toxicity for phase I trials}
 \usage{
 lateonset.next(design, target, p.true, currdose, assess.window, enter.times, dlt.times, 
        current.t, doses, prior.para = list(alp.prior = target, bet.prior = 1 - target),
@@ -53,13 +53,11 @@ movement directions, and \code{stop} indicates stopping the experiment.
 occurrence of over-toxicity did not happen.
 \item over.doses: a vector indicating whether the dose level (from the first to last dose level) is over-toxic
 or not (1 for yes).
-\item toxprob: the expected toxicity probability, \eqn{Pr(p_k > \phi | x_k, m_k)}, at all dose
-levels, where \eqn{p_k}, \eqn{x_k}, and \eqn{m_k} is the dose-limiting toxicity (DLT) rate, the
-numbers of observed DLTs, and the numbers of patients at dose level \eqn{k}.
 }
 }
 \description{
-The function is used to determine the next dose level in the CFO-type design with late-onset toxicity, specifically, including
+Based on the toxicity outcomes of the enrolled cohorts, the function is used to determine the next
+dose level in the CFO-type designs with late-onset toxicity for phase I trials, specifically, including
 time-to-event CFO (TITE-CFO) design, fractional CFO (fCFO) design, benchmark CFO design,
 time-to-event accumulative CFO (TITE-aCFO) design, fractional accumulative CFO (f-aCFO) design
 and benchmark aCFO design.
@@ -121,5 +119,5 @@ Fang J, Yin G (2024). Fractional accumulative calibration‐free odds (f‐aCFO)
 in phase I clinical trials. \emph{Statistics in Medicine}.
 }
 \author{
-Jialu Fang, Wenliang Wang, and Guosheng Yin
+Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
 }

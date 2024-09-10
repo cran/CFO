@@ -2,7 +2,7 @@
 % Please edit documentation in R/CFO.simu.R
 \name{CFO.simu}
 \alias{CFO.simu}
-\title{Conduct one simulation using the Calibration-free odds (CFO) or accumulative CFO (aCFO) design.}
+\title{Conduct one simulation using the calibration-free odds (CFO) or accumulative CFO (aCFO) design for phase I trials.}
 \usage{
 CFO.simu(design, target, p.true, init.level = 1, ncohort, cohortsize,
        prior.para = list(alp.prior = target, bet.prior = 1 - target), 
@@ -38,10 +38,10 @@ The \code{CFO.simu} function returns a list object comprising the following comp
 \itemize{
 \item target: the target DLT rate.
 \item MTD: the selected MTD. \code{MTD = 99} indicates that the simulation is terminated due to early stopping.
-\item correct: a binary indicator of whether the recommended dose level matches the target DLT rate (1 for yes).
+\item correct: a binary indicator of whether the recommended dose level matches the correct MTD (1 for yes).
+The correct MTD is the dose level at which the true DLT rate is closest to the target DLT rate.
 \item npatients: the total number of patients allocated to all dose levels.
 \item ntox: the total number of DLTs observed for all dose levels.
-\item npercent: the percentage of subjects assigned to the target DLT rate.
 \item over.doses: a vector indicating whether each dose is overdosed or not (1 for yes).
 \item cohortdose: a vector including the dose level assigned to each cohort.
 \item ptoxic: the percentage of subjects assigned to dose levels with a DLT rate greater than the target.
@@ -51,7 +51,7 @@ The \code{CFO.simu} function returns a list object comprising the following comp
 }
 }
 \description{
-In the CFO and aCFO designs, the function is used to conduct one single simulation and find the maximum tolerated dose (MTD).
+In the CFO and aCFO designs for phase I trials, the function is used to conduct one single simulation and find the maximum tolerated dose (MTD).
 }
 \note{
 The \code{CFO.simu()} function is designed to conduct a single CFO or aCFO simulation. If \code{design = 'CFO'}, it corresponds
@@ -86,5 +86,5 @@ Fang J, Yin G (2024). Fractional accumulative calibration‐free odds (f‐aCFO)
 in phase I clinical trials. \emph{Statistics in Medicine}.
 }
 \author{
-Jialu Fang, Wenliang Wang, and Guosheng Yin
+Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
 }

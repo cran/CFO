@@ -1,6 +1,7 @@
-#' Determination of the dose level for next cohort in the calibration-free odds type (CFO-type) design with late-onset toxicity
+#' Determination of the dose level for next cohort in the calibration-free odds type (CFO-type) design with late-onset toxicity for phase I trials
 #' 
-#' The function is used to determine the next dose level in the CFO-type design with late-onset toxicity, specifically, including 
+#' Based on the toxicity outcomes of the enrolled cohorts, the function is used to determine the next 
+#' dose level in the CFO-type designs with late-onset toxicity for phase I trials, specifically, including 
 #' time-to-event CFO (TITE-CFO) design, fractional CFO (fCFO) design, benchmark CFO design, 
 #' time-to-event accumulative CFO (TITE-aCFO) design, fractional accumulative CFO (f-aCFO) design 
 #' and benchmark aCFO design.
@@ -53,12 +54,9 @@
 #'   occurrence of over-toxicity did not happen.
 #'   \item over.doses: a vector indicating whether the dose level (from the first to last dose level) is over-toxic 
 #'   or not (1 for yes).
-#'   \item toxprob: the expected toxicity probability, \eqn{Pr(p_k > \phi | x_k, m_k)}, at all dose
-#'   levels, where \eqn{p_k}, \eqn{x_k}, and \eqn{m_k} is the dose-limiting toxicity (DLT) rate, the 
-#'   numbers of observed DLTs, and the numbers of patients at dose level \eqn{k}.
 #' }
 #' 
-#' @author Jialu Fang, Wenliang Wang, and Guosheng Yin 
+#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin 
 #' 
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
 #'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
@@ -282,6 +280,8 @@ lateonset.next <- function(design, target, p.true, currdose, assess.window, ente
   }
   
   over.doses <- rep(0, ndose)
+  
+  
   for (i in 1:ndose){
     cy <- ays[i]
     cn <- ans[i]
@@ -290,13 +290,6 @@ lateonset.next <- function(design, target, p.true, currdose, assess.window, ente
       over.doses[i:ndose] <- 1
       break()
     }
-  }
-  
-  tover.prob <- rep(0, ndose)
-  for (i in 1:ndose){
-    cy <- ays[i]
-    cn <- ans[i]
-    tover.prob[i] <- post.prob.fn(target, cy, cn, alp.prior, bet.prior)
   }
 
   if (cutoff.eli != early.stop) {
@@ -330,7 +323,7 @@ lateonset.next <- function(design, target, p.true, currdose, assess.window, ente
   overtox <- res$overtox
 
   out <- list(target=target, ays=ays, ans=ans, decision=decision, currdose = currdose, 
-              nextdose=nextdose, overtox=overtox, over.doses=over.doses, toxprob=tover.prob)
+              nextdose=nextdose, overtox=overtox, over.doses=over.doses)
   class(out) <- c("cfo_decision", "cfo")
   return(out)
 }

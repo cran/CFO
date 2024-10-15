@@ -2,14 +2,14 @@
 #' 
 #' In the CFO design for phase I/II trials, the function is used to determine the dose movement 
 #' based on the toxicity outcomes and efficacy outcomes of the enrolled cohorts.
-#' @usage CFOeff.next(target, txs, tys, tns, currdose, 
+#' @usage CFOeff.next(target, axs, ays, ans, currdose, 
 #'                    prior.para=list(alp.prior = target, bet.prior = 1 - target, 
 #'                    alp.prior.eff = 0.5, bet.prior.eff = 0.5),  
 #'                    cutoff.eli=0.95, early.stop=0.95, effearly.stop = 0.9, mineff)
 #' @param target the target DLT rate.
-#' @param txs the cumulative counts of efficacy outcomes at all dose levels.
-#' @param tys the cumulative counts of DLTs observed at all dose levels.
-#' @param tns the cumulative counts of patients treated at all dose levels.
+#' @param axs the cumulative counts of efficacy outcomes at all dose levels.
+#' @param ays the cumulative counts of DLTs observed at all dose levels.
+#' @param ans the cumulative counts of patients treated at all dose levels.
 #' @param currdose the current dose level.
 #' @param prior.para the prior parameters for two beta distributions, where set as \code{list(alp.prior = target, 
 #'                  bet.prior = 1 - target, alp.prior.eff = 0.5, bet.prior.eff = 0.5)} by default. \code{alp.prior} and \code{bet.prior} 
@@ -39,9 +39,9 @@
 #' @return The \code{CFOeff.next()} function returns a list object comprising the following elements:
 #' \itemize{
 #'   \item target: the target DLT rate.
-#'   \item txs: the cumulative counts of efficacy outcomes at all dose levels.
-#'   \item tys: the cumulative counts of DLTs observed at all dose levels.
-#'   \item tns: the cumulative counts of patients treated at all dose levels.
+#'   \item axs: the cumulative counts of efficacy outcomes at all dose levels.
+#'   \item ays: the cumulative counts of DLTs observed at all dose levels.
+#'   \item ans: the cumulative counts of patients treated at all dose levels.
 #'   \item decision: the decision in the CFO design, where \code{de-escalation}, \code{stay}, and \code{escalation} represent the 
 #'   movement directions of the dose level, \code{stop_for_tox} indicates stopping the experiment because the lowest dose level 
 #'   is overly toxic and \code{stop_for_low_eff} indicates that all dose level in the admissible set shows low efficacy.
@@ -61,7 +61,7 @@
 #'   \item class: the phase of the trial.
 #' }
 #' 
-#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+#' @author Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 #' 
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
 #'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
@@ -69,24 +69,24 @@
 #' @export
 #'
 #' @examples 
-#' txs = c(3, 1, 7, 11, 26); tys = c(0, 0, 0, 0, 6); tns = c(6, 3, 12, 17, 36)
+#' axs = c(3, 1, 7, 11, 26); ays = c(0, 0, 0, 0, 6); ans = c(6, 3, 12, 17, 36)
 #' target <- 0.4
-#' decision <- CFOeff.next(target,txs,tys,tns,currdose = 3, mineff = 0.3)
+#' decision <- CFOeff.next(target,axs,ays,ans,currdose = 3, mineff = 0.3)
 #' summary(decision)
 #' \donttest{#early stop for overly toxic
-#' txs = c(13, 11, 7, 11, 26); tys = c(25, 18, 12, 17, 26); tns = c(36, 23, 22, 27, 36)
+#' axs = c(13, 11, 7, 11, 26); ays = c(25, 18, 12, 17, 26); ans = c(36, 23, 22, 27, 36)
 #' target <- 0.4
-#' decision <- CFOeff.next(target,txs,tys,tns,currdose = 1, mineff = 0.3)
+#' decision <- CFOeff.next(target,axs,ays,ans,currdose = 1, mineff = 0.3)
 #' summary(decision)
 #' }
 #' \donttest{#early stop for low efficacy
-#' txs = c(0, 0, 0, 0, 0); tys = c(2, 1, 1, 1, 6); tns = c(36, 23, 22, 27, 36)
+#' axs = c(0, 0, 0, 0, 0); ays = c(2, 1, 1, 1, 6); ans = c(36, 23, 22, 27, 36)
 #' target <- 0.4
-#' decision <- CFOeff.next(target,txs,tys,tns,currdose = 1, mineff = 0.3)
+#' decision <- CFOeff.next(target,axs,ays,ans,currdose = 1, mineff = 0.3)
 #' summary(decision)
 #' }
 
-CFOeff.next <- function(target, txs, tys, tns, currdose, prior.para=list(alp.prior = target, bet.prior = 1 - target, alp.prior.eff = 0.5, 
+CFOeff.next <- function(target, axs, ays, ans, currdose, prior.para=list(alp.prior = target, bet.prior = 1 - target, alp.prior.eff = 0.5, 
                                                                          bet.prior.eff = 0.5), 
                         cutoff.eli=0.95, early.stop=0.95, effearly.stop=0.9, mineff){
   ###############################################################################
@@ -94,9 +94,14 @@ CFOeff.next <- function(target, txs, tys, tns, currdose, prior.para=list(alp.pri
   ###############################################################################
   # posterior probability of pj >= phi given data
   post.prob.fn <- function(phi, y, n, alp.prior=0.1, bet.prior=0.1){
-    alp <- alp.prior + y 
-    bet <- bet.prior + n - y
-    1 - pbeta(phi, alp, bet)
+    if(n != 0){
+      alp <- alp.prior + y 
+      bet <- bet.prior + n - y
+      res <- 1 - pbeta(phi, alp, bet)
+    }else{
+      res <- NA
+    }
+    return(res)
   }
   
   under.eff.fn <- function(mineff, effearly.stop,prior.para=list())
@@ -140,8 +145,8 @@ CFOeff.next <- function(target, txs, tys, tns, currdose, prior.para=list(alp.pri
     fn.max <- function(x){
       pbeta(x, alp1, bet1)*dbeta(x, alp2, bet2)
     }
-    const.min <- integrate(fn.min, lower=0, upper=0.99, subdivisions=1000, rel.tol = 1e-10)$value
-    const.max <- integrate(fn.max, lower=0, upper=1, rel.tol = 1e-10)$value
+    const.min <- integrate(fn.min, lower=0, upper=0.999, subdivisions=1000, rel.tol = 1e-10)$value
+    const.max <- integrate(fn.max, lower=0, upper=0.999, rel.tol = 1e-10)$value
     p1 <- integrate(fn.min, lower=0, upper=phi)$value/const.min
     p2 <- integrate(fn.max, lower=0, upper=phi)$value/const.max
     
@@ -178,8 +183,9 @@ CFOeff.next <- function(target, txs, tys, tns, currdose, prior.para=list(alp.pri
   }
   
   # compute the marginal prob when lower < phiL/phiC/phiR < upper
-  # i.e., Pr(Y=y|lower<phi<upper)
+  # i.e., Pr(Y=y|lower<phi<upper) upper = 1 if upper > 1
   margin.phi <- function(y, n, lower, upper){
+    if (upper > 1){upper <- 1}
     C <- 1/(upper-lower)
     fn <- function(phi) {
       dbinom(y, n, phi)*C
@@ -277,11 +283,11 @@ CFOeff.next <- function(target, txs, tys, tns, currdose, prior.para=list(alp.pri
   ###############################################################################
   #the results for current 3 dose levels
   if (currdose != 1) {
-    cys <- tys[(currdose - 1):(currdose + 1)]
-    cns <- tns[(currdose - 1):(currdose + 1)]
+    cys <- ays[(currdose - 1):(currdose + 1)]
+    cns <- ans[(currdose - 1):(currdose + 1)]
   }else{
-    cys <- c(NA, tys[1:(currdose + 1)])
-    cns <- c(NA, tns[1:(currdose + 1)])
+    cys <- c(NA, ays[1:(currdose + 1)])
+    cns <- c(NA, ans[1:(currdose + 1)])
   }
   
   
@@ -310,10 +316,10 @@ CFOeff.next <- function(target, txs, tys, tns, currdose, prior.para=list(alp.pri
       }
     }
   }
-  cover.prob <- rep(0, length(tys))
-  for (i in 1:length(tys)){
-    ty <- tys[i]
-    tn <- tns[i]
+  cover.prob <- rep(0, length(ays))
+  for (i in 1:length(ays)){
+    ty <- ays[i]
+    tn <- ans[i]
     if (is.na(tn)){
       cover.prob[i] <- NA
     }else{
@@ -321,16 +327,17 @@ CFOeff.next <- function(target, txs, tys, tns, currdose, prior.para=list(alp.pri
     }
   }
   
-  if (cutoff.eli != early.stop) {
-    cy <- cys[1]
-    cn <- cns[1]
+  idx <- if (currdose == 2) 1 else if (currdose == 1) 2 else NA
+  if (!is.na(idx) & (cutoff.eli != early.stop)) {
+    cy <- cys[idx]
+    cn <- cns[idx]
     if (is.na(cn)){
-      cover.doses[1] <- NA
+      cover.doses[idx] <- NA
     }else{
       prior.para <- c(list(y=cy, n=cn),list(alp.prior=alp.prior, bet.prior=bet.prior, 
                                             alp.prior.eff = alp.prior.eff, bet.prior.eff = bet.prior.eff))
       if (overdose.fn(target, early.stop, prior.para)){
-        cover.doses[1:3] <- 1
+        cover.doses[idx:3] <- 1
       }
     }
   }
@@ -409,12 +416,12 @@ CFOeff.next <- function(target, txs, tys, tns, currdose, prior.para=list(alp.pri
     nextdose <- 1
     probs <- 1
     set <- 1
-    cover.prob <- post.prob.fn(target, tys[1], tns[1], alp.prior, bet.prior)
+    cover.prob <- post.prob.fn(target, ays[1], ans[1], alp.prior, bet.prior)
   }else{
     low.idx <- 1
-    ad.xs <- txs[low.idx:up.idx]
-    ad.ys <- tys[low.idx:up.idx]
-    ad.ns <- tns[low.idx:up.idx]
+    ad.xs <- axs[low.idx:up.idx]
+    ad.ys <- ays[low.idx:up.idx]
+    ad.ns <- ans[low.idx:up.idx]
     set <- c(low.idx:up.idx)
     
     for (dose in set){
@@ -451,7 +458,7 @@ CFOeff.next <- function(target, txs, tys, tns, currdose, prior.para=list(alp.pri
     cover.prob = cover.prob[1]
   }
   
-  out <- list(target = target, txs = txs, tys = tys, tns = tns, decision = decision, currdose = currdose, 
+  out <- list(target = target, axs = axs, ays = ays, ans = ans, decision = decision, currdose = currdose, 
               nextdose = nextdose, overtox = overtox, toxprob = cover.prob, effprob = probs, 
               admset = set, class = "phaseI/II")
   class(out) <- c("cfo_eff_decision", "cfo")

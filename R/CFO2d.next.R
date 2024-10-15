@@ -41,7 +41,7 @@
 #'   occurrence of over-toxicity did not happen.
 #' }
 #' 
-#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+#' @author Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 #' 
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
 #'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
@@ -62,6 +62,20 @@
 #' currdose <- c(2,3)
 #' decision <- CFO2d.next(target = 0.3, cys, cns, currdose = currdose, seed = 1)
 #' summary(decision)
+#' 
+#' cns <- matrix(c(NA, NA, NA,
+#'                 NA, 6, 0,
+#'                 NA, 0, 0), 
+#'               nrow = 3, ncol = 3, byrow = TRUE)
+#'
+#' cys <- matrix(c(NA, NA, NA,
+#'                NA, 6, 0,
+#'                NA, 0, 0), 
+#'              nrow = 3, ncol = 3, byrow = TRUE)
+#' currdose <- c(1,1)
+#' decision <- CFO2d.next(target = 0.3, cys, cns, currdose = currdose, seed = 1)
+#' summary(decision)
+#' 
 
 
 CFO2d.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=target, bet.prior=1-target), cutoff.eli=0.95, early.stop=0.95, seed=NULL){
@@ -75,9 +89,14 @@ CFO2d.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=tar
   
   # posterior probability of pj >= phi given data
   post.prob.fn <- function(phi, y, n, alp.prior=0.1, bet.prior=0.9){
-    alp <- alp.prior + y 
-    bet <- bet.prior + n - y
-    1 - pbeta(phi, alp, bet)
+    if(n != 0){
+      alp <- alp.prior + y 
+      bet <- bet.prior + n - y
+      res <- 1 - pbeta(phi, alp, bet)
+    }else{
+      res <- NA
+    }
+    return(res)
   }
   
   prob.int <- function(phi, y1, n1, y2, n2, alp.prior, bet.prior){
@@ -151,8 +170,9 @@ CFO2d.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=tar
   }
   
   # compute the marginal prob when lower < phiL/phiC/phiR < upper
-  # i.e., Pr(Y=y|lower<phi<upper)
+  # i.e., Pr(Y=y|lower<phi<upper); upper = 1 if upper > 1
   margin.phi <- function(y, n, lower, upper){
+    if (upper > 1){upper <- 1}
     C <- 1/(upper-lower)
     fn <- function(phi) {
       dbinom(y, n, phi)*C
@@ -268,7 +288,7 @@ CFO2d.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=tar
     }
   }
   
-  cover.prob=matrix(0,3,3)
+  cover.prob=matrix(NA,3,3)
   for (i in 1:3){
     for (j in 1:3){
       cy <- cys[i,j]
@@ -279,13 +299,22 @@ CFO2d.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=tar
         cover.prob[i,j] <- post.prob.fn(target, cy, cn, alp.prior, bet.prior)
       }
     }
-  } 
+  }
   
+  if ((cutoff.eli != early.stop)&(currdose[1] == 1)&(currdose[2] == 1)) {
+    if (!is.na(cns[2,2])){
+      if (overdose.fn(target, early.stop, cys[2,2], cns[2,2], prior.para)){
+        cover.doses[2,2] <- 1
+        overtox = c(1,1)
+      }
+    }
+  }
   
   if (overdose.fn(target, cutoff.eli, cys[2,2], cns[2,2], prior.para)){
     cover.doses[2,2] <- 1
     overtox <- currdose
   }
+  
   if (!is.na(cns[2,3])){
     if (overdose.fn(target, cutoff.eli, cys[2,3], cns[2,3], prior.para)){
       cover.doses[2,3] <- 1
@@ -296,6 +325,7 @@ CFO2d.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=tar
     cover.doses[2,3] <- NA
     cover.doses[3,3] <- NA
   }
+  
   if (!is.na(cns[3,2])){
     if (overdose.fn(target, cutoff.eli, cys[3,2], cns[3,2], prior.para)){
       cover.doses[3,2] <- 1
@@ -306,19 +336,17 @@ CFO2d.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=tar
     cover.doses[3,2] <- NA
     cover.doses[3,3] <- NA
   }
+  
   if (!is.na(cns[2,3])&!is.na(cns[3,2])){
     if(overdose.fn(target, cutoff.eli, cys[2,3], cns[2,3], prior.para)&overdose.fn(target, cutoff.eli, cys[3,2], cns[3,2], prior.para)){
       overtox <- currdose
     }
   }
   
-  if (cutoff.eli != early.stop) {
-    if (currdose==c(1,1) & overdose.fn(target, early.stop, cys[1,1], cns[1,1], prior.para)){
-      cover.doses[1,1] <- 1
-      out <- list(target=target, cys=cys, cns=cns, decision="stop", currdose = currdose, nextdose = c(99,99), overtox = c(1,1), toxprob=cover.prob)
-      class(out) <- "cfo"
-      return(out)
-    }
+  if ((cover.doses[2,2] == 1)&(currdose[1] == 1)&(currdose[2] == 1)){
+    out <- list(target=target, cys=cys, cns=cns, decision="stop", currdose = currdose, nextdose = c(99,99), overtox = c(1,1), toxprob=cover.prob)
+    class(out) <- "cfo"
+    return(out)
   }
   
   
@@ -405,3 +433,6 @@ CFO2d.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=tar
   class(out) <- c("cfo_decision", "cfo")
   return(out)
 }
+
+
+

@@ -76,7 +76,7 @@ In the example, we set \code{nsimu = 3} for testing time considerations.
 In reality, \code{nsimu} is typically set as 5000 to ensure the accuracy of the results.
 }
 \examples{
-target <- 0.30; mineff <- 0.30; cohortsize = 3; ncohort = 12; nsimu = 10; init.level = 1
+target <- 0.30; mineff <- 0.30; cohortsize = 3; ncohort = 12; nsimu = 3; init.level = 1
 prior.para = list(alp.prior = target, bet.prior = 1 - target, 
                   alp.prior.eff = 0.5, bet.prior.eff = 0.5)
 p.true=c(0.05, 0.07, 0.1, 0.12, 0.16)
@@ -86,7 +86,7 @@ result <- CFOeff.oc (target, p.true, pE.true, prior.para,
 summary(result)
 plot(result)
 \donttest{#earlystop for overly tox
-target <- 0.30; mineff <- 0.30; cohortsize = 3; ncohort = 12; nsimu = 10; init.level = 1
+target <- 0.30; mineff <- 0.30; cohortsize = 3; ncohort = 12; nsimu = 3; init.level = 1
 prior.para = list(alp.prior = target, bet.prior = 1 - target, 
                   alp.prior.eff = 0.5, bet.prior.eff = 0.5)
 p.true=c(0.75, 0.77, 0.81, 0.82, 0.86)
@@ -113,5 +113,5 @@ Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical t
 \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
 }
 \author{
-Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 }

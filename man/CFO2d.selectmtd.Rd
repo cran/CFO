@@ -81,5 +81,5 @@ Bril G, Dykstra R, Pillers C, Robertson T (1984). Algorithm AS 206: Isotonic reg
 \emph{Journal of the Royal Statistical Society. Series C (Applied Statistics)}, 33(3), 352–357.
 }
 \author{
-Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 }

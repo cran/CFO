@@ -6,7 +6,7 @@
 #' time-to-event accumulative CFO (TITE-aCFO) design, fractional accumulative CFO (f-aCFO) design 
 #' and benchmark aCFO design.
 #' 
-#' @usage lateonset.next(design, target, p.true, currdose, assess.window, enter.times, dlt.times, 
+#' @usage lateonset.next(design, target, ndose, currdose, assess.window, enter.times, dlt.times, 
 #'        current.t, doses, prior.para = list(alp.prior = target, bet.prior = 1 - target),
 #'        cutoff.eli = 0.95, early.stop = 0.95)
 #'
@@ -14,7 +14,7 @@
 #'               \code{'fCFO'}, \code{'f-aCFO'}, \code{'bCFO'}, and \code{'b-aCFO'}. Specifically, \code{'bCFO'} refers 
 #'               to the benchmark CFO design, and \code{'b-aCFO'} denotes the benchmark aCFO design.
 #' @param target the target DLT rate.
-#' @param p.true the true DLT rates under the different dose levels.
+#' @param ndose the number of dose levels.
 #' @param currdose the current dose level.
 #' @param assess.window the maximal assessment window size.
 #' @param enter.times the time that each participant enters the trial.
@@ -54,9 +54,13 @@
 #'   occurrence of over-toxicity did not happen.
 #'   \item over.doses: a vector indicating whether the dose level (from the first to last dose level) is over-toxic 
 #'   or not (1 for yes).
+#'   \item toxprob: the expected toxicity probability, \eqn{Pr(p_k > \phi | x_k, m_k)}, at all dose
+#'   levels, where \eqn{p_k}, \eqn{x_k}, and \eqn{m_k} is the dose-limiting toxicity (DLT) rate, the 
+#'   numbers of observed DLTs, and the numbers of patients at dose level \eqn{k}. \code{NA} indicates that there 
+#'   are no patients at the corresponding dose level.
 #' }
 #' 
-#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin 
+#' @author Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin 
 #' 
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
 #'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
@@ -71,38 +75,38 @@
 #' @export
 #'
 #' @examples
-#' target <- 0.2; p.true <- c(0.01, 0.07, 0.20, 0.35, 0.50, 0.65, 0.80)
+#' target <- 0.2; ndose <- 7
 #' enter.times<- c(0, 0.266, 0.638, 1.54, 2.48, 3.14, 3.32, 4.01, 4.39, 5.38, 5.76,
 #'                6.54, 6.66, 6.93, 7.32, 7.66, 8.14, 8.74)
 #' dlt.times<- c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0.610, 0, 2.98, 0, 0, 1.95, 0, 0, 1.48)
 #' current.t<- 9.41
 #' doses<-c(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 3, 3, 3, 4, 4, 4)
 #' ## determine the dose level for the next cohort using the TITE-CFO design
-#' decision <- lateonset.next(design = 'TITE-CFO', target, p.true, currdose = 4, assess.window = 3,   
+#' decision <- lateonset.next(design = 'TITE-CFO', target, ndose, currdose = 4, assess.window = 3,   
 #'                enter.times, dlt.times, current.t, doses)
 #' summary(decision)
 #' ## determine the dose level for the next cohort using the TITE-aCFO design
-#' decision <- lateonset.next(design = 'TITE-aCFO', target, p.true, currdose = 4, assess.window = 3,   
+#' decision <- lateonset.next(design = 'TITE-aCFO', target, ndose, currdose = 4, assess.window = 3,   
 #'                enter.times, dlt.times, current.t, doses)
 #' summary(decision)
 #' ## determine the dose level for the next cohort using the f-CFO design
-#' decision <- lateonset.next(design = 'fCFO', target, p.true, currdose = 4, assess.window = 3,  
+#' decision <- lateonset.next(design = 'fCFO', target, ndose, currdose = 4, assess.window = 3,  
 #'                enter.times, dlt.times, current.t, doses)
 #' summary(decision)
 #' ## determine the dose level for the next cohort using the f-aCFO design
-#' decision <- lateonset.next(design = 'f-aCFO', target, p.true, currdose = 4, assess.window = 3,   
+#' decision <- lateonset.next(design = 'f-aCFO', target, ndose, currdose = 4, assess.window = 3,   
 #'                enter.times, dlt.times, current.t, doses)
 #' summary(decision)
 #' ## determine the dose level for the next cohort using the benchmark CFO design
-#' decision <- lateonset.next(design = 'bCFO', target, p.true, currdose = 4, assess.window = 3,   
+#' decision <- lateonset.next(design = 'bCFO', target, ndose, currdose = 4, assess.window = 3,   
 #'                enter.times, dlt.times, current.t, doses)
 #' summary(decision)
 #' ## determine the dose level for the next cohort using the benchmark aCFO design
-#' decision <- lateonset.next(design='b-aCFO', target, p.true, currdose = 4, assess.window = 3,   
+#' decision <- lateonset.next(design='b-aCFO', target, ndose, currdose = 4, assess.window = 3,   
 #'                enter.times, dlt.times, current.t, doses)
 #' summary(decision)
 #' 
-lateonset.next <- function(design, target, p.true, currdose, assess.window, enter.times, dlt.times, 
+lateonset.next <- function(design, target, ndose, currdose, assess.window, enter.times, dlt.times, 
                            current.t, doses, prior.para=list(alp.prior=target, bet.prior=1-target),
                            cutoff.eli=0.95, early.stop=0.95){
   ###############################################################################
@@ -206,9 +210,14 @@ lateonset.next <- function(design, target, p.true, currdose, assess.window, ente
   
   # posterior probability of pj >= phi given data
   post.prob.fn <- function(phi, y, n, alp.prior=0.1, bet.prior=0.9){
-    alp <- alp.prior + y 
-    bet <- bet.prior + n - y
-    1 - pbeta(phi, alp, bet)
+    if(n != 0){
+      alp <- alp.prior + y 
+      bet <- bet.prior + n - y
+      res <- 1 - pbeta(phi, alp, bet)
+    }else{
+      res <- NA
+    }
+    return(res)
   }
   
   overdose.fn <- function(phi, threshold, prior.para=list()){
@@ -235,7 +244,6 @@ lateonset.next <- function(design, target, p.true, currdose, assess.window, ente
   }else if (design == 'f-aCFO'){accumulation = TRUE; impute.method = "frac"
   }else if (design == 'b-aCFO'){accumulation = TRUE; impute.method = "No"}
   
-  ndose <- length(p.true)
   if (is.null(prior.para$alp.prior)){
     prior.para <- c(prior.para, list(alp.prior=target, bet.prior=1-target))
   }
@@ -291,6 +299,13 @@ lateonset.next <- function(design, target, p.true, currdose, assess.window, ente
       break()
     }
   }
+  
+  tover.prob <- rep(0, ndose)
+  for (i in 1:ndose){
+    cy <- ays[i]
+    cn <- ans[i]
+    tover.prob[i] <- post.prob.fn(target, cy, cn, alp.prior, bet.prior)
+  }
 
   if (cutoff.eli != early.stop) {
     cy <- ays[1]
@@ -323,7 +338,7 @@ lateonset.next <- function(design, target, p.true, currdose, assess.window, ente
   overtox <- res$overtox
 
   out <- list(target=target, ays=ays, ans=ans, decision=decision, currdose = currdose, 
-              nextdose=nextdose, overtox=overtox, over.doses=over.doses)
+              nextdose=nextdose, overtox=overtox, over.doses=over.doses, toxprob=tover.prob)
   class(out) <- c("cfo_decision", "cfo")
   return(out)
 }

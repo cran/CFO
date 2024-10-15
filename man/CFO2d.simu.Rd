@@ -47,6 +47,10 @@ The correct MTD is the dose level at which the true DLT rate is closest to the t
 \item patientDLT: the DLT observed at each cohort.
 \item sumDLT: the total number of DLT observed.
 \item earlystop: a binary indicator of whether the trial is early stopped (1 for yes).
+\item p_est: the isotonic estimate of the DLT probablity at each dose and associated \eqn{95\%} credible interval.
+\code{p_est = NA} if all tested doses are overly toxic.
+\item p_est_CI: the credible interval for the isotonic estimate.
+\code{p_est_CI = NA} if all tested doses are overly toxic.
 }
 }
 \description{
@@ -76,5 +80,5 @@ Wang W, Jin H, Zhang Y, Yin G (2023). Two-dimensional calibration-free odds (2dC
 design for phase I drug-combination trials. \emph{Frontiers in Oncology}, 13, 1294258.
 }
 \author{
-Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 }

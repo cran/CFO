@@ -8,7 +8,7 @@
 #'        cutoff.eli = 0.95, early.stop = 0.95, seeds = NULL)
 #'
 #' @param nsimu the total number of trials to be simulated. The default value is 5000.
-#' @param design option for selecting different designs, which can be set as \code{'CFO'}, \code{'aCFO'},
+#' @param design option for selecting different designs, which can be set as \code{'CFO'}, \code{'aCFO'}, \code{'rCFO'},
 #'               \code{'TITE-CFO'}, \code{'TITE-aCFO'}, \code{'fCFO'}, \code{'f-aCFO'}, \code{'bCFO'}, 
 #'               and \code{'b-aCFO'}. Specifically, \code{'bCFO'} refers to the benchmark CFO design, and 
 #'               \code{'b-aCFO'} denotes the benchmark aCFO design.
@@ -61,7 +61,7 @@
 #' \item simu.setup: the parameters for the simulation set-up.
 #' }
 #' 
-#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+#' @author Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 #' 
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
 #'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
@@ -70,7 +70,7 @@
 #'             Yin G, Zheng S, Xu J (2013). Fractional dose-finding methods with late-onset toxicity in 
 #'             phase I clinical trials. \emph{Journal of Biopharmaceutical Statistics}, 23(4), 856-870.\cr
 #'             Fang J, Yin G (2024). Fractional accumulative calibration‐free odds (f‐aCFO) design for delayed toxicity 
-#'             in phase I clinical trials. \emph{Statistics in Medicine}.
+#'             in phase I clinical trials. \emph{Statistics in Medicine}, 43(17), 3210-3226.
 #' 
 #' @importFrom dplyr transmute 
 #' @import pbapply
@@ -106,6 +106,13 @@
 #'        assess.window = NA, tte.para = NA, accrual.rate = NA, accrual.dist = NA, seeds = 1:nsimu)
 #' summary(aCFOoc)
 #' plot(aCFOoc)
+#' 
+#' ## get the operating characteristics for 5 simulations using the rCFO design
+#' rCFOoc <- CFO.oc (nsimu, design = 'rCFO', target, p.true, init.level, ncohort, cohortsize,
+#'        assess.window = NA, tte.para = NA, accrual.rate = NA, accrual.dist = NA, seeds = 1:nsimu)
+#' summary(rCFOoc)
+#' plot(rCFOoc)
+#' 
 #' ## get the operating characteristics for 5 simulations using the TITE-CFO design
 #' TITECFOoc <- CFO.oc (nsimu, design = 'TITE-CFO', target, p.true, init.level, ncohort, cohortsize,
 #'         assess.window, tte.para, accrual.rate, accrual.dist, seeds = 1:nsimu)
@@ -154,7 +161,7 @@ CFO.oc <- function(nsimu=5000, design, target, p.true, init.level=1, ncohort, co
   ###############################################################################  
   
   run.fn <- function(i){
-    if (design == 'CFO' || design == 'aCFO'){
+    if (design == 'CFO' || design == 'aCFO' || design == 'rCFO'){
       res <- CFO.simu(design, target, p.true, init.level, ncohort, cohortsize, prior.para, 
                       cutoff.eli, early.stop, seed = seeds[i])
     }else{
@@ -220,7 +227,7 @@ CFO.oc <- function(nsimu=5000, design, target, p.true, init.level=1, ncohort, co
   averDLT <- sumTox/sumPatients
   errStop <- nsimu-nonErrStops
   
-  if (design == 'CFO' || design == 'aCFO'){
+  if (design == 'CFO' || design == 'aCFO' || design == 'rCFO'){
     out <- list(p.true=p.true, selpercent=selpercent, npatients=nPatients/nsimu, ntox=nTox/nsimu, 
                 MTDsel=MTDsel, MTDallo=MTDallo, oversel=oversel, 
                 overallo=overallo, averDLT=averDLT, percentstop=errStop/nsimu,

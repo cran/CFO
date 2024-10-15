@@ -66,6 +66,8 @@ acceptable efficacy rate (1 for yes).
 \item correct: a binary indicator of whether the recommended dose level matches the correct OBD (1 for yes).
 The correct OBD is the dose level in the admissible set with the upper bound being the correct MTD,
 which has the highest true efficacy probability.
+\item OBDprob: the probability that each dose level would be selected as OBD. The probability indicates that \eqn{q_k} corresponds
+to dose level \eqn{k} being the highest in the admissible set. \eqn{q_k} is efficacy probability correspond to dose level k here.
 \item sumDLT: the total number of DLT observed.
 \item sumeff: the total number of efficacy outcome observed.
 \item earlystop: a binary indicator of whether the trial is early stopped (1 for yes).
@@ -122,5 +124,5 @@ Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical t
 \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
 }
 \author{
-Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 }

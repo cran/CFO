@@ -41,9 +41,13 @@
 #'   \item patientDLT: the DLT observed at each cohort.
 #'   \item sumDLT: the total number of DLT observed.
 #'   \item earlystop: a binary indicator of whether the trial is early stopped (1 for yes).
+#'   \item p_est: the isotonic estimate of the DLT probablity at each dose and associated \eqn{95\%} credible interval.
+#'    \code{p_est = NA} if all tested doses are overly toxic.
+#'   \item p_est_CI: the credible interval for the isotonic estimate.
+#'    \code{p_est_CI = NA} if all tested doses are overly toxic.
 #' }
 #' 
-#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+#' @author Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 #' 
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
 #'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
@@ -104,14 +108,19 @@ CFO2d.simu <- function(target, p.true, init.level=c(1,1), ncohort, cohortsize,
   }
   
   post.prob.fn <- function(phi, y, n, alp.prior=phi, bet.prior=1-phi){
-    alp <- alp.prior + y 
-    bet <- bet.prior + n - y
-    1 - pbeta(phi, alp, bet)
+    if(n != 0){
+      alp <- alp.prior + y 
+      bet <- bet.prior + n - y
+      res <- 1 - pbeta(phi, alp, bet)
+    }else{
+      res <- NA
+    }
+    return(res)
   }
   
   MTD.level <- function(phi, p.true){
     if (p.true[1,1]>phi+0.1){
-      MTD <- 99
+      MTD <- matrix(c(99,99),nrow = 1)
       return(MTD)
     }
     min_value <- min(abs(phi - p.true))
@@ -205,8 +214,13 @@ CFO2d.simu <- function(target, p.true, init.level=c(1,1), ncohort, cohortsize,
     cidx.A <- idx[1]
     cidx.B <- idx[2]
   }
+  
+  result <- CFO2d.selectmtd(target, ans, ays)
+  p_est <- result$p_est
+  p_est_CI <- result$p_est_CI
+  
   if (earlystop==0){
-    MTD <- CFO2d.selectmtd(target, ans, ays)$MTD
+    MTD <- result$MTD
   }else{
     MTD <- c(99,99)
   }
@@ -222,13 +236,16 @@ CFO2d.simu <- function(target, p.true, init.level=c(1,1), ncohort, cohortsize,
   }
   
   npercent <- 0
-  for (j in 1:ndose.A) {
-    for (k in 1:ndose.B) {
-      if (any(apply(tmtd, 1, function(x) all(x == c(j,k))))){
-        npercent <- npercent + ans[j,k]
+  if (correct == 1){
+    for (j in 1:ndose.A) {
+      for (k in 1:ndose.B) {
+        if (any(apply(tmtd, 1, function(x) all(x == c(j,k))))){
+          npercent <- npercent + ans[j,k]
+        }
       }
     }
   }
+
   npercent <- npercent/(ncohort*cohortsize)
   
   ptoxic <- 0
@@ -241,9 +258,10 @@ CFO2d.simu <- function(target, p.true, init.level=c(1,1), ncohort, cohortsize,
   }
   ptoxic <- ptoxic/(ncohort*cohortsize)
   # simu.res <- list(dose = simu.res.dose, DLT = simu.res.DLT)
+  MTD <- matrix(MTD, nrow = 1, ncol = 2)
   out<-list(target=target, MTD=MTD, correct=correct, npatients=ans, ntox=ays, npercent=npercent, 
             over.doses=tover.doses, cohortdose=simu.res.dose, ptoxic=ptoxic, patientDLT = simu.res.DLT,
-            sumDLT=sum(simu.res.DLT), earlystop=earlystop)
+            sumDLT=sum(simu.res.DLT), earlystop=earlystop, p_est = p_est, p_est_CI = p_est_CI)
   class(out) <- c("cfo_trial", "cfo")
   return(out)
 }

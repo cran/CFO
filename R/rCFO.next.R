@@ -1,11 +1,11 @@
 #' 
-#' Determination of the dose level for next cohort in the calibration-free odds (CFO) design for phase I trials
+#' Determination of the dose level for next cohort in the randomized calibration-free odds (rCFO) design for phase I trials
 #' 
-#' In the CFO design for phase I trials, the function is used to determine the dose movement based on the toxicity outcomes of the enrolled cohorts.
+#' In the rCFO design for phase I trials, the function is used to determine the dose movement based on the toxicity outcomes of the enrolled cohorts.
 #'
-#' @usage CFO.next(target, cys, cns, currdose, 
+#' @usage rCFO.next(target, cys, cns, currdose, 
 #'        prior.para = list(alp.prior = target, bet.prior = 1 - target),
-#'        cutoff.eli = 0.95, early.stop = 0.95)
+#'        cutoff.eli = 0.95, early.stop = 0.95, seed)
 #'
 #' @param target the target DLT rate.
 #' @param cys the cumulative numbers of DLTs observed at the left, current, and right dose levels.
@@ -18,23 +18,18 @@
 #'                    the default value of \code{cutoff.eli = 0.95} for general use.
 #' @param early.stop the threshold value for early stopping. The default value \code{early.stop = 0.95}
 #'                generally works well.
+#' @param seed an integer to be set as the seed of the random number generator for reproducible results. The default value is set to \code{NULL}.
 #'
-#' @details The CFO design determines the dose level for the next cohort by assessing evidence from the current 
-#'          dose level and its adjacent levels. This evaluation is based on odds ratios denoted as \eqn{O_k}, where 
-#'          \eqn{k = L, C, R} represents left, current (central), and right dose levels. Additionally, we define \eqn{\overline{O}_k = 1/O_k}. 
-#'          The ratio \eqn{O_C / \overline{O}_{L}} indicates the inclination for de-escalation, while \eqn{\overline{O}_C / O_R} 
-#'          quantifies the tendency for escalation. Threshold values \eqn{\gamma_L} and \eqn{\gamma_R} are chosen to 
-#'          minimize the probability of making incorrect decisions. The decision process is summarized in Table 1
-#'          of Jin and Yin (2022).
-#'          The early stopping and dose elimination rules are implemented to ensure patient safety. If the data suggest excessive 
-#'          toxicity at the current dose level, we exclude that dose level and those higher levels. If the lowest dose level is overly toxic,
-#'          the trial will be terminated according to the early stopping rule.
+#' @details The original CFO design makes deterministic dose movement by constructing two odds ratios, \eqn{\pi_L =O_C/ \overline{O}_{L}}
+#'          and \eqn{\pi_R =\overline{O}_{C}/ O_R}, and comparing them against thresholds \eqn{\gamma_L} and \eqn{\gamma_R}, respectively.
+#'          The rCFO design introduces a randomization scheme, normalizes odds ratios, \eqn{\pi_L}, and \eqn{\pi_R} into probabilities, and constructs
+#'          probabilities for dose escalation, de-escalation, and staying at the same dose.
 #'          
 #' @note    When the current dose level is the lowest or highest (i.e., at the boundary), the parts in \code{cys} and 
 #'          \code{cns} where there is no data are filled with \code{NA}. \cr
 #'          The dose level indicated by \code{overtox} and all the dose levels above experience over-toxicity, and these dose levels will be eliminated.
 #'          
-#' @return The \code{CFO.next()} function returns a list object comprising the following elements:
+#' @return The \code{rCFO.next()} function returns a list object comprising the following elements:
 #' \itemize{
 #'   \item target: the target DLT rate.
 #'   \item cys: the cumulative counts of DLTs observed at the left, current, and right dose levels.
@@ -60,21 +55,21 @@
 #' @examples
 #' ## determine the dose level for the next cohort of new patients
 #' cys <- c(0, 1, 0); cns <- c(3, 6, 0)
-#' decision <- CFO.next(target=0.2, cys=cys, cns=cns, currdose=3)
+#' decision <- rCFO.next(target=0.2, cys=cys, cns=cns, currdose=3)
 #' summary(decision)
 #' 
 #' cys <- c(NA, 3, 0); cns <- c(NA, 3, 0)
-#' decision <- CFO.next(target=0.2, cys=cys, cns=cns, currdose=1)
+#' decision <- rCFO.next(target=0.2, cys=cys, cns=cns, currdose=1)
 #' summary(decision)
 #' 
 #' cys <- c(0, 3, NA); cns <- c(3, 3, NA)
-#' decision <- CFO.next(target=0.2, cys=cys, cns=cns, currdose=7)
+#' decision <- rCFO.next(target=0.2, cys=cys, cns=cns, currdose=7)
 #' summary(decision)
 #' 
 #' @import stats
 #' @export
-CFO.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=target, bet.prior=1-target),
-                     cutoff.eli=0.95, early.stop=0.95){
+rCFO.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=target, bet.prior=1-target),
+                          cutoff.eli=0.95, early.stop=0.95, seed=NULL){
   ###############################################################################
   ###############define the functions used for main function#####################
   ###############################################################################
@@ -153,7 +148,7 @@ CFO.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=targe
   }
   
   # compute the marginal prob when lower < phiL/phiC/phiR < upper
-  # i.e., Pr(Y=y|lower<phi<upper); upper = 1 if upper > 1
+  # i.e., Pr(Y=y|lower<phi<upper)
   margin.phi <- function(y, n, lower, upper){
     if (upper > 1){upper <- 1}
     C <- 1/(upper-lower)
@@ -181,7 +176,7 @@ CFO.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=targe
     margin.ys <- p.y1s.mat * p.y2s.mat
     margin.ys
   }
-
+  
   # Obtain the optimal gamma for the hypothesis test
   optim.gamma.fn <- function(n1, n2, phi, type, alp.prior, bet.prior){
     OR.table <- All.OR.table(phi, n1, n2, type, alp.prior, bet.prior) 
@@ -239,6 +234,7 @@ CFO.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=targe
   }
   alp.prior <- prior.para$alp.prior
   bet.prior <- prior.para$bet.prior
+  set.seed(seed)
   
   cover.doses <- c(0,0,0)
   
@@ -267,19 +263,18 @@ CFO.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=targe
     }
   }
   
-  
   idx <- if (currdose == 2) 1 else if (currdose == 1) 2 else NA
   if (!is.na(idx) & (cutoff.eli != early.stop)) {
-      cy <- cys[idx]
-      cn <- cns[idx]
-      if (is.na(cn)){
-        cover.doses[idx] <- NA
-      }else{
-        prior.para <- c(list(y=cy, n=cn),list(alp.prior=alp.prior, bet.prior=bet.prior))
-        if (overdose.fn(target, early.stop, prior.para)){
-          cover.doses[idx:3] <- 1
-        }
+    cy <- cys[idx]
+    cn <- cns[idx]
+    if (is.na(cn)){
+      cover.doses[idx] <- NA
+    }else{
+      prior.para <- c(list(y=cy, n=cn),list(alp.prior=alp.prior, bet.prior=bet.prior))
+      if (overdose.fn(target, early.stop, prior.para)){
+        cover.doses[idx:3] <- 1
       }
+    }
   }
   
   cover.doses <- ifelse(is.na(cys), NA, cover.doses)
@@ -327,14 +322,39 @@ CFO.next <- function(target, cys, cns, currdose, prior.para=list(alp.prior=targe
         gam2 <- optim.gamma.fn(cns[2], cns[3], target, "R", alp.prior, bet.prior)$gamma 
         OR.v1 <- OR.values(target, cys[1], cns[1], cys[2], cns[2], alp.prior, bet.prior, type="L")
         OR.v2 <- OR.values(target, cys[2], cns[2], cys[3], cns[3], alp.prior, bet.prior, type="R")
+        pL <- OR.v1/(OR.v1+OR.v2)
         v1 <- OR.v1 > gam1
         v2 <- OR.v2 > gam2
         if (v1 & !v2){
-          index <- -1
-          decision <- "de-escalation"
+          if (runif(1) < pL){
+            index <- -1
+            decision <- "de-escalation"
+          } else {
+            index <- 0
+            decision <- "stay"
+          }
         }else if (!v1 & v2){
-          index <- 1
-          decision <- "escalation"
+          if (runif(1) < pL){
+            index <- 0
+            decision <- "stay"
+          } else {
+            index <- 1
+            decision <- "escalation"
+          }
+        }else if (v1 & v2){
+          if (OR.v1 == OR.v2){
+            print('equal occur')
+            index <- 0
+            decision <- "stay"
+          } else {
+            if (runif(1) < pL){
+              index <- -1
+              decision <- "de-escalation"
+            } else {
+              index <- 1
+              decision <- "escalation"
+            }
+          }
         }else{
           index <- 0
           decision <- "stay"

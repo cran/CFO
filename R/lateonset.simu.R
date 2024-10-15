@@ -53,6 +53,10 @@
 #' \item patientDLT: a vector including the DLT outcome observed for each patient.
 #' \item sumDLT: the total number of DLT observed.
 #' \item earlystop: a binary indicator of whether the trial is early stopped (1 for yes).
+#' \item p_est: the isotonic estimate of the DLT probablity at each dose and associated \eqn{95\%} credible interval.
+#'      \code{p_est = NA} if all tested doses are overly toxic.
+#' \item p_overdose: p_overdose: the probability of overdosing defined as \eqn{Pr(toxicity > \code{target}|data)}.
+#'      \code{p_overdose = NA} if all tested doses are overly toxic.
 #' \item totaltime: the duration of the trial.
 #' \item entertimes: the time that each participant enters the trial.
 #' \item DLT.times: the time to DLT for each subject in the trial. If no DLT occurs for a certain subject, 
@@ -60,7 +64,7 @@
 #' }
 #' 
 #'         
-#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+#' @author Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 #' 
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials. 
 #'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
@@ -202,13 +206,13 @@ lateonset.simu <- function(design, target, p.true, init.level=1, ncohort, cohort
     
     if (design == 'bCFO' || design == 'b-aCFO'){
       current.t <- enter.times[length(enter.times)] + assess.window
-      res <- lateonset.next(design, target, p.true, currdose, assess.window, enter.times, dlt.times, current.t, doses, 
+      res <- lateonset.next(design, target, ndose, currdose, assess.window, enter.times, dlt.times, current.t, doses, 
                             prior.para, cutoff.eli, early.stop)
       over.doses <- res$over.doses
       overTox <- res$overTox
       current.t <- current.t + delta.time
     }else{
-      res <- lateonset.next(design, target, p.true, currdose, assess.window, enter.times, dlt.times, current.t, doses, 
+      res <- lateonset.next(design, target, ndose, currdose, assess.window, enter.times, dlt.times, current.t, doses, 
                             prior.para, cutoff.eli, early.stop)
       over.doses <- res$over.doses
       overTox <- res$overTox
@@ -230,8 +234,13 @@ lateonset.simu <- function(design, target, p.true, init.level=1, ncohort, cohort
     ans <- c(ans, sum(doses==j))
     ays <- c(ays, sum(y.raw[doses==j]))
   }
+  
+  result <- CFO.selectmtd(target, ans, ays, prior.para, cutoff.eli, early.stop, verbose = TRUE)
+  p_est <- result$p_est
+  p_overdose <- result$p_overdose
+  
   if (earlystop==0){
-    MTD <- CFO.selectmtd(target, ans, ays, prior.para, cutoff.eli, early.stop, verbose=FALSE)$MTD
+    MTD <- result$MTD
   }else{
     MTD <- 99
   }
@@ -246,7 +255,7 @@ lateonset.simu <- function(design, target, p.true, init.level=1, ncohort, cohort
   
   out <- list(target=target, MTD=MTD, correct=correct, npatients=ans, ntox=ays, 
               over.doses=over.doses, cohortdose=doselist, ptoxic=ptoxic, patientDLT = dlts,
-              sumDLT=sum(dlts), earlystop=earlystop,
+              sumDLT=sum(dlts), earlystop=earlystop, p_est = p_est, p_overdose = p_overdose,
               totaltime=assess.t[length(assess.t)], entertimes=enter.times, DLTtimes=dlt.times)
   class(out) <- c("cfo_trial", "cfo")
   return(out)

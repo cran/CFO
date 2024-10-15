@@ -83,8 +83,8 @@ selmtd <- CFO2d.selectmtd(target=0.3, npts=npts, ntox=ntox)
 plot(selmtd)
 
 ## summarize the object returned by CFOeff.next()
-decision <- CFOeff.next(target=0.4,txs=c(3,1,7,11,26),tys=c(0,0,0,0,6),
-              tns= c(6, 3, 12, 17, 36), currdose = 3, mineff = 0.3)
+decision <- CFOeff.next(target=0.4,axs=c(3,1,7,11,26),ays=c(0,0,0,0,6),
+              ans= c(6, 3, 12, 17, 36), currdose = 3, mineff = 0.3)
 plot(decision)
 
 ## summarize the object returned by CFOeff.simu()
@@ -107,5 +107,5 @@ plot(result)
 
 }
 \author{
-Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 }

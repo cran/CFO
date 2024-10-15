@@ -4,7 +4,7 @@
 \alias{CFOeff.next}
 \title{Determination of the dose level for next cohort in the calibration-free odds (CFO) design for phase I/II trials}
 \usage{
-CFOeff.next(target, txs, tys, tns, currdose, 
+CFOeff.next(target, axs, ays, ans, currdose, 
                    prior.para=list(alp.prior = target, bet.prior = 1 - target, 
                    alp.prior.eff = 0.5, bet.prior.eff = 0.5),  
                    cutoff.eli=0.95, early.stop=0.95, effearly.stop = 0.9, mineff)
@@ -12,11 +12,11 @@ CFOeff.next(target, txs, tys, tns, currdose,
 \arguments{
 \item{target}{the target DLT rate.}
 
-\item{txs}{the cumulative counts of efficacy outcomes at all dose levels.}
+\item{axs}{the cumulative counts of efficacy outcomes at all dose levels.}
 
-\item{tys}{the cumulative counts of DLTs observed at all dose levels.}
+\item{ays}{the cumulative counts of DLTs observed at all dose levels.}
 
-\item{tns}{the cumulative counts of patients treated at all dose levels.}
+\item{ans}{the cumulative counts of patients treated at all dose levels.}
 
 \item{currdose}{the current dose level.}
 
@@ -45,9 +45,9 @@ By default, \code{effearly.stop} is set as \code{0.9}.}
 The \code{CFOeff.next()} function returns a list object comprising the following elements:
 \itemize{
 \item target: the target DLT rate.
-\item txs: the cumulative counts of efficacy outcomes at all dose levels.
-\item tys: the cumulative counts of DLTs observed at all dose levels.
-\item tns: the cumulative counts of patients treated at all dose levels.
+\item axs: the cumulative counts of efficacy outcomes at all dose levels.
+\item ays: the cumulative counts of DLTs observed at all dose levels.
+\item ans: the cumulative counts of patients treated at all dose levels.
 \item decision: the decision in the CFO design, where \code{de-escalation}, \code{stay}, and \code{escalation} represent the
 movement directions of the dose level, \code{stop_for_tox} indicates stopping the experiment because the lowest dose level
 is overly toxic and \code{stop_for_low_eff} indicates that all dose level in the admissible set shows low efficacy.
@@ -80,20 +80,20 @@ current dose, then the admissible set \eqn{A_n} will be \eqn{\{1,\dots,d_n\}}. I
 efficacy probability for dose level \eqn{k}.
 }
 \examples{
-txs = c(3, 1, 7, 11, 26); tys = c(0, 0, 0, 0, 6); tns = c(6, 3, 12, 17, 36)
+axs = c(3, 1, 7, 11, 26); ays = c(0, 0, 0, 0, 6); ans = c(6, 3, 12, 17, 36)
 target <- 0.4
-decision <- CFOeff.next(target,txs,tys,tns,currdose = 3, mineff = 0.3)
+decision <- CFOeff.next(target,axs,ays,ans,currdose = 3, mineff = 0.3)
 summary(decision)
 \donttest{#early stop for overly toxic
-txs = c(13, 11, 7, 11, 26); tys = c(25, 18, 12, 17, 26); tns = c(36, 23, 22, 27, 36)
+axs = c(13, 11, 7, 11, 26); ays = c(25, 18, 12, 17, 26); ans = c(36, 23, 22, 27, 36)
 target <- 0.4
-decision <- CFOeff.next(target,txs,tys,tns,currdose = 1, mineff = 0.3)
+decision <- CFOeff.next(target,axs,ays,ans,currdose = 1, mineff = 0.3)
 summary(decision)
 }
 \donttest{#early stop for low efficacy
-txs = c(0, 0, 0, 0, 0); tys = c(2, 1, 1, 1, 6); tns = c(36, 23, 22, 27, 36)
+axs = c(0, 0, 0, 0, 0); ays = c(2, 1, 1, 1, 6); ans = c(36, 23, 22, 27, 36)
 target <- 0.4
-decision <- CFOeff.next(target,txs,tys,tns,currdose = 1, mineff = 0.3)
+decision <- CFOeff.next(target,axs,ays,ans,currdose = 1, mineff = 0.3)
 summary(decision)
 }
 }
@@ -102,5 +102,5 @@ Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical t
 \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
 }
 \author{
-Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 }

@@ -44,15 +44,16 @@
 #'   occurrence of over-toxicity did not happen.
 #'   \item toxprob: the expected toxicity probability, \eqn{Pr(p_k > \phi | x_k, m_k)}, at all dose
 #'   levels, where \eqn{p_k}, \eqn{x_k}, and \eqn{m_k} is the dose-limiting toxicity (DLT) rate, the 
-#'   numbers of observed DLTs, and the numbers of patients at dose level \eqn{k}.
+#'   numbers of observed DLTs, and the numbers of patients at dose level \eqn{k}. \code{NA} indicates that there 
+#'   are no patients at the corresponding dose level.
 #' }
 #'  
-#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin 
+#' @author Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin 
 #' 
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
 #'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
 #'             Fang J, Yin G (2024). Fractional accumulative calibration‐free odds (f‐aCFO) design for delayed toxicity 
-#'             in phase I clinical trials. \emph{Statistics in Medicine}.
+#'             in phase I clinical trials. \emph{Statistics in Medicine}, 43(17), 3210-3226.
 #'
 #' @examples
 #' ## determine the dose level for the next cohort of new patients
@@ -81,9 +82,14 @@ aCFO.next <- function(target, ays, ans, currdose, prior.para=list(alp.prior=targ
 ###############################################################################
   # posterior probability of pj >= phi given data
   post.prob.fn <- function(phi, y, n, alp.prior=0.1, bet.prior=0.1){
-    alp <- alp.prior + y 
-    bet <- bet.prior + n - y
-    1 - pbeta(phi, alp, bet)
+    if(n != 0){
+      alp <- alp.prior + y 
+      bet <- bet.prior + n - y
+      res <- 1 - pbeta(phi, alp, bet)
+    }else{
+      res <- NA
+    }
+    return(res)
   }
   
   overdose.fn <- function(phi, threshold, prior.para=list()){
@@ -111,8 +117,8 @@ aCFO.next <- function(target, ays, ans, currdose, prior.para=list(alp.prior=targ
     fn.max <- function(x){
       pbeta(x, alp1, bet1)*dbeta(x, alp2, bet2)
     }
-    const.min <- integrate(fn.min, lower=0, upper=0.99, subdivisions=1000, rel.tol = 1e-10)$value
-    const.max <- integrate(fn.max, lower=0, upper=1, rel.tol = 1e-10)$value
+    const.min <- integrate(fn.min, lower=0, upper=0.999, subdivisions=1000, rel.tol = 1e-10)$value
+    const.max <- integrate(fn.max, lower=0, upper=0.999, rel.tol = 1e-10)$value
     p1 <- integrate(fn.min, lower=0, upper=phi)$value/const.min
     p2 <- integrate(fn.max, lower=0, upper=phi)$value/const.max
     list(p1=p1, p2=p2)
@@ -164,8 +170,9 @@ aCFO.next <- function(target, ays, ans, currdose, prior.para=list(alp.prior=targ
   }
   
   # compute the marginal prob when lower < phiL/phiC/phiR < upper
-  # i.e., Pr(Y=y|lower<phi<upper)
+  # i.e., Pr(Y=y|lower<phi<upper); upper = 1 if upper > 1
   margin.phi <- function(y, n, lower, upper){
+    if (upper > 1){upper <- 1}
     C <- 1/(upper-lower)
     fn <- function(phi) {
       dbinom(y, n, phi)*C

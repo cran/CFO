@@ -12,7 +12,7 @@ CFO.oc(nsimu = 5000, design, target, p.true, init.level = 1, ncohort, cohortsize
 \arguments{
 \item{nsimu}{the total number of trials to be simulated. The default value is 5000.}
 
-\item{design}{option for selecting different designs, which can be set as \code{'CFO'}, \code{'aCFO'},
+\item{design}{option for selecting different designs, which can be set as \code{'CFO'}, \code{'aCFO'}, \code{'rCFO'},
 \code{'TITE-CFO'}, \code{'TITE-aCFO'}, \code{'fCFO'}, \code{'f-aCFO'}, \code{'bCFO'},
 and \code{'b-aCFO'}. Specifically, \code{'bCFO'} refers to the benchmark CFO design, and
 \code{'b-aCFO'} denotes the benchmark aCFO design.}
@@ -113,6 +113,13 @@ aCFOoc <- CFO.oc (nsimu, design = 'aCFO', target, p.true, init.level, ncohort, c
        assess.window = NA, tte.para = NA, accrual.rate = NA, accrual.dist = NA, seeds = 1:nsimu)
 summary(aCFOoc)
 plot(aCFOoc)
+
+## get the operating characteristics for 5 simulations using the rCFO design
+rCFOoc <- CFO.oc (nsimu, design = 'rCFO', target, p.true, init.level, ncohort, cohortsize,
+       assess.window = NA, tte.para = NA, accrual.rate = NA, accrual.dist = NA, seeds = 1:nsimu)
+summary(rCFOoc)
+plot(rCFOoc)
+
 ## get the operating characteristics for 5 simulations using the TITE-CFO design
 TITECFOoc <- CFO.oc (nsimu, design = 'TITE-CFO', target, p.true, init.level, ncohort, cohortsize,
         assess.window, tte.para, accrual.rate, accrual.dist, seeds = 1:nsimu)
@@ -148,8 +155,8 @@ phase I trials with late‐onset outcomes. \emph{Pharmaceutical Statistics}. 22(
 Yin G, Zheng S, Xu J (2013). Fractional dose-finding methods with late-onset toxicity in
 phase I clinical trials. \emph{Journal of Biopharmaceutical Statistics}, 23(4), 856-870.\cr
 Fang J, Yin G (2024). Fractional accumulative calibration‐free odds (f‐aCFO) design for delayed toxicity
-in phase I clinical trials. \emph{Statistics in Medicine}.
+in phase I clinical trials. \emph{Statistics in Medicine}, 43(17), 3210-3226.
 }
 \author{
-Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 }

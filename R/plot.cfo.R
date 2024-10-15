@@ -17,12 +17,12 @@
 #'       is typically set to 5000 to ensure the accuracy of the results.
 #' 
 #' 
-#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+#' @author Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 #' 
 #' @importFrom grDevices dev.flush dev.hold devAskNewPage
 #' @importFrom graphics axis barplot mtext par plot
 #' @importFrom graphics abline arrows legend points
-#' @import ggplot2
+#' @import ggplot2 RColorBrewer scales
 #' @export
 #'
 #' @examples
@@ -80,8 +80,8 @@
 #' plot(selmtd)
 #' 
 #' ## summarize the object returned by CFOeff.next()
-#' decision <- CFOeff.next(target=0.4,txs=c(3,1,7,11,26),tys=c(0,0,0,0,6),
-#'               tns= c(6, 3, 12, 17, 36), currdose = 3, mineff = 0.3)
+#' decision <- CFOeff.next(target=0.4,axs=c(3,1,7,11,26),ays=c(0,0,0,0,6),
+#'               ans= c(6, 3, 12, 17, 36), currdose = 3, mineff = 0.3)
 #' plot(decision)
 #' 
 #' ## summarize the object returned by CFOeff.simu()
@@ -501,7 +501,36 @@ plot.cfo<- function (x,..., name = deparse(substitute(x)))
       
       
     }
-    
+    ###############################################################################
+    #########################plot for gamma.table()################################
+    ###############################################################################
+    else if(!is.null(objectPlot$gammatb.left)){
+      dfL <- as.data.frame(as.table(objectPlot$gammatb.left))
+      upperL <- max(dfL$Freq, na.rm = TRUE)
+      dfR <- as.data.frame(as.table(objectPlot$gammatb.right))
+      upperR <- max(dfR$Freq, na.rm = TRUE)
+      pL <- ggplot(dfL, aes(.data$Var1, .data$Var2, fill = .data$Freq)) +
+        geom_tile() +
+        scale_fill_gradientn(colors = brewer.pal(n = 11, name = "RdYlBu"), 
+                             values = scales::rescale(c(0, upperL)),
+                             limits = c(0, upperL)) +  scale_x_discrete(labels = NULL) + 
+        scale_y_discrete(labels = NULL) +
+        theme_minimal() +
+        labs(x = "mL", y = "mC")+
+        theme(axis.text.x = element_text(angle = 90, hjust = 1))
+      pR <- ggplot(dfR, aes(.data$Var1, .data$Var2, fill = .data$Freq)) +
+        geom_tile() +
+        scale_fill_gradientn(colors = brewer.pal(n = 11, name = "RdYlBu"), 
+                             values = scales::rescale(c(0, upperR)),
+                             limits = c(0, upperR)) +  scale_x_discrete(labels = NULL) + 
+        scale_y_discrete(labels = NULL) +
+        theme_minimal() +
+        labs(x = "mR", y = "mC")+
+        theme(axis.text.x = element_text(angle = 90, hjust = 1))
+      print(pL)
+      print(pR)
+      
+    }
     ###############################################################################
     #########################plot for others###################################
     ###############################################################################

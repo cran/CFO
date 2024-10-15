@@ -52,6 +52,8 @@
 #'         \item correct: a binary indicator of whether the recommended dose level matches the correct OBD (1 for yes).
 #'               The correct OBD is the dose level in the admissible set with the upper bound being the correct MTD, 
 #'               which has the highest true efficacy probability.
+#'         \item OBDprob: the probability that each dose level would be selected as OBD. The probability indicates that \eqn{q_k} corresponds 
+#'   to dose level \eqn{k} being the highest in the admissible set. \eqn{q_k} is efficacy probability correspond to dose level k here.
 #'         \item sumDLT: the total number of DLT observed.
 #'         \item sumeff: the total number of efficacy outcome observed.
 #'         \item earlystop: a binary indicator of whether the trial is early stopped (1 for yes).
@@ -61,7 +63,7 @@
 #'         \item class: the phase of the trial.
 #'         }
 #'
-#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+#' @author Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
 #'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
 #' @export
@@ -108,9 +110,14 @@ CFOeff.simu <- function(target, p.true, pE.true, ncohort=10, init.level=1, cohor
   ###############define the functions used for main function#####################
   ###############################################################################
   post.prob.fn <- function(target, y, n, alp.prior=0.1, bet.prior=0.1){
-    alp <- alp.prior + y 
-    bet <- bet.prior + n - y
-    1 - pbeta(target, alp, bet)
+    if(n != 0){
+      alp <- alp.prior + y 
+      bet <- bet.prior + n - y
+      res <- 1 - pbeta(target, alp, bet)
+    }else{
+      res <- NA
+    }
+    return(res)
   }
   
   
@@ -197,6 +204,7 @@ CFOeff.simu <- function(target, p.true, pE.true, ncohort=10, init.level=1, cohor
   ndose <- length(p.true)
   doselist <- rep(0, ncohort)
   cidx <- init.level
+  OBDprob <- NULL
   
   tys <- rep(0, ndose) # number of DLT responses for different doses.
   txs <- rep(0, ndose) # number of efficacy responses for different doses.
@@ -252,7 +260,7 @@ CFOeff.simu <- function(target, p.true, pE.true, ncohort=10, init.level=1, cohor
       
     }
     
-    nextinfo <- CFOeff.next(target, txs, tys, tns, cidx, prior.para, cutoff.eli, early.stop, effearly.stop, mineff)
+    nextinfo <- CFOeff.next(target, axs = txs, ays = tys, ans = tns, cidx, prior.para, cutoff.eli, early.stop, effearly.stop, mineff)
     cidx <- nextinfo$nextdose
     if (cidx == 99){
       if (nextinfo$decision == "stop_for_tox"){
@@ -263,7 +271,11 @@ CFOeff.simu <- function(target, p.true, pE.true, ncohort=10, init.level=1, cohor
       earlystop <- 1
       break()
     }
-    
+    if (i == ncohort){
+      para = list(alp.prior.eff = prior.para$alp.prior.eff, bet.prior.eff = prior.para$bet.prior.eff)
+      result <- CFOeff.selectobd(target, txs, tys, tns, para, mineff, effearly.stop)
+      OBDprob <- result$OBD.probs
+    }
     
   }
   
@@ -293,7 +305,7 @@ CFOeff.simu <- function(target, p.true, pE.true, ncohort=10, init.level=1, cohor
   
   out <- list(OBD = OBD, target = target, npatients = tns, neff = txs, ntox = tys, pE.true = pE.true, p.true = p.true, 
               cohortdose = doselist, ptoxic = ptoxic, patientDLT = DLTlist, patienteff = EFFlist, 
-              over.doses = tover.doses, under.eff = tunder.effs, correct = correct, 
+              over.doses = tover.doses, under.eff = tunder.effs, correct = correct, OBDprob = OBDprob, 
               sumDLT = sum(DLTlist), sumeff = sum(EFFlist), earlystop = earlystop, stopreason = stopreason, 
               class = "phaseI/II")
   class(out) <- c("cfo_eff_trial", "cfo")

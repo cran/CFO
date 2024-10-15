@@ -2,14 +2,14 @@
 % Please edit documentation in R/CFO.simu.R
 \name{CFO.simu}
 \alias{CFO.simu}
-\title{Conduct one simulation using the calibration-free odds (CFO) or accumulative CFO (aCFO) design for phase I trials.}
+\title{Conduct one simulation using the calibration-free odds (CFO), accumulative CFO (aCFO) design, or randomized CFO (rCFO) design for phase I trials.}
 \usage{
 CFO.simu(design, target, p.true, init.level = 1, ncohort, cohortsize,
        prior.para = list(alp.prior = target, bet.prior = 1 - target), 
        cutoff.eli = 0.95, early.stop = 0.95, seed = NULL)
 }
 \arguments{
-\item{design}{option for selecting different designs, which can be set as \code{'CFO'} and \code{'aCFO'}.}
+\item{design}{option for selecting different designs, which can be set as \code{'CFO'}, \code{'aCFO'} or \code{'rCFO'}.}
 
 \item{target}{the target DLT rate.}
 
@@ -48,15 +48,20 @@ The correct MTD is the dose level at which the true DLT rate is closest to the t
 \item patientDLT: a vector including the DLT outcome observed for each patient.
 \item sumDLT: the total number of DLT observed.
 \item earlystop: a binary indicator of whether the trial is early stopped (1 for yes).
+\item p_est: the isotonic estimate of the DLT probablity at each dose and associated \eqn{95\%} credible interval.
+\code{p_est = NA} if all tested doses are overly toxic.
+\item p_overdose: p_overdose: the probability of overdosing defined as \eqn{Pr(toxicity > \code{target}|data)}.
+\code{p_overdose = NA} if all tested doses are overly toxic.
 }
 }
 \description{
-In the CFO and aCFO designs for phase I trials, the function is used to conduct one single simulation and find the maximum tolerated dose (MTD).
+In the CFO, aCFO, and rCFO designs for phase I trials, the function is used to conduct one single simulation and find the maximum tolerated dose (MTD).
 }
 \note{
-The \code{CFO.simu()} function is designed to conduct a single CFO or aCFO simulation. If \code{design = 'CFO'}, it corresponds
-to the CFO design. If \code{design = 'aCFO'}, it corresponds to the aCFO design. \cr
-The early stopping and dose elimination rules are incorporated into the CFO or aCFO design
+The \code{CFO.simu()} function is designed to conduct a single CFO, aCFO or rCFO simulation. If \code{design = 'CFO'}, it corresponds
+to the CFO design. If \code{design = 'aCFO'}, it corresponds to the aCFO design. If \code{design = 'rCFO'}, it corresponds to the
+rCFO design. \cr
+The early stopping and dose elimination rules are incorporated into designs
 to ensure patient safety and benefit. If there is substantial evidence indicating that the current dose level
 exhibits excessive toxicity, we exclude the current dose level as well as higher dose levels from the trial. If the lowest dose level is overly toxic, the trial will be terminated
 according to the early stopping rule. Upon the predefined maximum sample size is reached or the lowest dose
@@ -77,14 +82,18 @@ plot(CFOtrial)
 aCFOtrial <- CFO.simu(design = 'aCFO', target, p.true, init.level, ncohort, cohortsize, seed = 1)
 summary(aCFOtrial)
 plot(aCFOtrial)
+### find the MTD for a single rCFO simulation
+rCFOtrial <- CFO.simu(design = 'rCFO', target, p.true, init.level, ncohort, cohortsize, seed = 1)
+summary(rCFOtrial)
+plot(rCFOtrial)
 }
 }
 \references{
 Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
 \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
 Fang J, Yin G (2024). Fractional accumulative calibration‐free odds (f‐aCFO) design for delayed toxicity
-in phase I clinical trials. \emph{Statistics in Medicine}.
+in phase I clinical trials. \emph{Statistics in Medicine}, 43(17), 3210-3226.
 }
 \author{
-Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 }

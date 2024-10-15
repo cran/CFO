@@ -43,7 +43,8 @@ terminated due to early stopping.
 occurrence of over-toxicity did not happen.
 \item toxprob: the expected toxicity probability, \eqn{Pr(p_k > \phi | x_k, m_k)}, at all dose
 levels, where \eqn{p_k}, \eqn{x_k}, and \eqn{m_k} is the dose-limiting toxicity (DLT) rate, the
-numbers of observed DLTs, and the numbers of patients at dose level \eqn{k}.
+numbers of observed DLTs, and the numbers of patients at dose level \eqn{k}. \code{NA} indicates that there
+are no patients at the corresponding dose level.
 }
 }
 \description{
@@ -83,8 +84,8 @@ summary(decision)
 Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
 \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
 Fang J, Yin G (2024). Fractional accumulative calibration‐free odds (f‐aCFO) design for delayed toxicity
-in phase I clinical trials. \emph{Statistics in Medicine}.
+in phase I clinical trials. \emph{Statistics in Medicine}, 43(17), 3210-3226.
 }
 \author{
-Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 }

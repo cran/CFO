@@ -4,7 +4,7 @@
 \alias{lateonset.next}
 \title{Determination of the dose level for next cohort in the calibration-free odds type (CFO-type) design with late-onset toxicity for phase I trials}
 \usage{
-lateonset.next(design, target, p.true, currdose, assess.window, enter.times, dlt.times, 
+lateonset.next(design, target, ndose, currdose, assess.window, enter.times, dlt.times, 
        current.t, doses, prior.para = list(alp.prior = target, bet.prior = 1 - target),
        cutoff.eli = 0.95, early.stop = 0.95)
 }
@@ -15,7 +15,7 @@ to the benchmark CFO design, and \code{'b-aCFO'} denotes the benchmark aCFO desi
 
 \item{target}{the target DLT rate.}
 
-\item{p.true}{the true DLT rates under the different dose levels.}
+\item{ndose}{the number of dose levels.}
 
 \item{currdose}{the current dose level.}
 
@@ -53,6 +53,10 @@ movement directions, and \code{stop} indicates stopping the experiment.
 occurrence of over-toxicity did not happen.
 \item over.doses: a vector indicating whether the dose level (from the first to last dose level) is over-toxic
 or not (1 for yes).
+\item toxprob: the expected toxicity probability, \eqn{Pr(p_k > \phi | x_k, m_k)}, at all dose
+levels, where \eqn{p_k}, \eqn{x_k}, and \eqn{m_k} is the dose-limiting toxicity (DLT) rate, the
+numbers of observed DLTs, and the numbers of patients at dose level \eqn{k}. \code{NA} indicates that there
+are no patients at the corresponding dose level.
 }
 }
 \description{
@@ -76,34 +80,34 @@ the previous cohorts before determining the next dose assignment. This enhances 
 expense of a prolonged trial duration.
 }
 \examples{
-target <- 0.2; p.true <- c(0.01, 0.07, 0.20, 0.35, 0.50, 0.65, 0.80)
+target <- 0.2; ndose <- 7
 enter.times<- c(0, 0.266, 0.638, 1.54, 2.48, 3.14, 3.32, 4.01, 4.39, 5.38, 5.76,
                6.54, 6.66, 6.93, 7.32, 7.66, 8.14, 8.74)
 dlt.times<- c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0.610, 0, 2.98, 0, 0, 1.95, 0, 0, 1.48)
 current.t<- 9.41
 doses<-c(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 3, 3, 3, 4, 4, 4)
 ## determine the dose level for the next cohort using the TITE-CFO design
-decision <- lateonset.next(design = 'TITE-CFO', target, p.true, currdose = 4, assess.window = 3,   
+decision <- lateonset.next(design = 'TITE-CFO', target, ndose, currdose = 4, assess.window = 3,   
                enter.times, dlt.times, current.t, doses)
 summary(decision)
 ## determine the dose level for the next cohort using the TITE-aCFO design
-decision <- lateonset.next(design = 'TITE-aCFO', target, p.true, currdose = 4, assess.window = 3,   
+decision <- lateonset.next(design = 'TITE-aCFO', target, ndose, currdose = 4, assess.window = 3,   
                enter.times, dlt.times, current.t, doses)
 summary(decision)
 ## determine the dose level for the next cohort using the f-CFO design
-decision <- lateonset.next(design = 'fCFO', target, p.true, currdose = 4, assess.window = 3,  
+decision <- lateonset.next(design = 'fCFO', target, ndose, currdose = 4, assess.window = 3,  
                enter.times, dlt.times, current.t, doses)
 summary(decision)
 ## determine the dose level for the next cohort using the f-aCFO design
-decision <- lateonset.next(design = 'f-aCFO', target, p.true, currdose = 4, assess.window = 3,   
+decision <- lateonset.next(design = 'f-aCFO', target, ndose, currdose = 4, assess.window = 3,   
                enter.times, dlt.times, current.t, doses)
 summary(decision)
 ## determine the dose level for the next cohort using the benchmark CFO design
-decision <- lateonset.next(design = 'bCFO', target, p.true, currdose = 4, assess.window = 3,   
+decision <- lateonset.next(design = 'bCFO', target, ndose, currdose = 4, assess.window = 3,   
                enter.times, dlt.times, current.t, doses)
 summary(decision)
 ## determine the dose level for the next cohort using the benchmark aCFO design
-decision <- lateonset.next(design='b-aCFO', target, p.true, currdose = 4, assess.window = 3,   
+decision <- lateonset.next(design='b-aCFO', target, ndose, currdose = 4, assess.window = 3,   
                enter.times, dlt.times, current.t, doses)
 summary(decision)
 
@@ -119,5 +123,5 @@ Fang J, Yin G (2024). Fractional accumulative calibration‐free odds (f‐aCFO)
 in phase I clinical trials. \emph{Statistics in Medicine}.
 }
 \author{
-Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 }

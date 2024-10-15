@@ -70,6 +70,20 @@ cys <- matrix(c(0, 1, 0,
 currdose <- c(2,3)
 decision <- CFO2d.next(target = 0.3, cys, cns, currdose = currdose, seed = 1)
 summary(decision)
+
+cns <- matrix(c(NA, NA, NA,
+                NA, 6, 0,
+                NA, 0, 0), 
+              nrow = 3, ncol = 3, byrow = TRUE)
+
+cys <- matrix(c(NA, NA, NA,
+               NA, 6, 0,
+               NA, 0, 0), 
+             nrow = 3, ncol = 3, byrow = TRUE)
+currdose <- c(1,1)
+decision <- CFO2d.next(target = 0.3, cys, cns, currdose = currdose, seed = 1)
+summary(decision)
+
 }
 \references{
 Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
@@ -78,5 +92,5 @@ Wang W, Jin H, Zhang Y, Yin G (2023). Two-dimensional calibration-free odds (2dC
 design for phase I drug-combination trials. \emph{Frontiers in Oncology}, 13, 1294258.
 }
 \author{
-Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 }

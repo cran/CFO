@@ -39,9 +39,9 @@ print(decision)
 enter.times<- c(0, 0.266, 0.638, 1.54, 2.48, 3.14, 3.32, 4.01, 4.39, 5.38, 5.76,
                6.54, 6.66, 6.93, 7.32, 7.65, 8.14, 8.74)
 dlt.times<- c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0.995, 0, 0, 0, 0, 0, 0, 0, 2.58)
-current.t<- 9.41
+current.t<- 9.41; ndose = 7
 doses<-c(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 3, 3, 3, 4, 4, 4)
-decision <- lateonset.next(design = 'f-aCFO', target, p.true, currdose = 4, assess.window,   
+decision <- lateonset.next(design = 'f-aCFO', target, ndose, currdose = 4, assess.window,   
                enter.times, dlt.times, current.t, doses)
 print(decision)
 
@@ -105,8 +105,8 @@ CFO2doc <- CFO2d.oc(nsimu = 5, target, p.true, init.level = c(1,1), ncohort, coh
 print(CFO2doc)
 
 ## summarize the object returned by CFOeff.next()
-decision <- CFOeff.next(target=0.4,txs=c(3,1,7,11,26),tys=c(0,0,0,0,6),
-              tns= c(6, 3, 12, 17, 36), currdose = 3, mineff = 0.3)
+decision <- CFOeff.next(target=0.4,axs=c(3,1,7,11,26),ays=c(0,0,0,0,6),
+              ans= c(6, 3, 12, 17, 36), currdose = 3, mineff = 0.3)
 print(decision)
 
 ## summarize the object returned by CFOeff.simu()
@@ -128,5 +128,5 @@ print(result)
 
 }
 \author{
-Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 }

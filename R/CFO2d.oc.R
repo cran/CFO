@@ -40,7 +40,7 @@
 #'   \item simu.setup: the parameters for the simulation set-up.
 #' }
 #' 
-#' @author Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+#' @author Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 #' 
 #' @references Jin H, Yin G (2022). CFO: Calibration-free odds design for phase I/II clinical trials.
 #'             \emph{Statistical Methods in Medical Research}, 31(6), 1051-1066. \cr
@@ -70,21 +70,34 @@ CFO2d.oc <- function(nsimu = 1000, target, p.true, init.level = c(1,1), ncohort,
   })
   
   selpercent <- matrix(0, dim(p.true)[1], dim(p.true)[2])
+  overallo <- 0; sumPatients <- 0; sumTox <- 0
   for (i in 1:nsimu) {
-    selpercent[results[[i]]$MTD] <- selpercent[results[[i]]$MTD] + 1
+    MTD <- results[[i]]$MTD
+    if(MTD[1]<= dim(p.true)[1] & MTD[2] <= dim(p.true)[2]){
+      selpercent[MTD] <- selpercent[MTD] + 1
+    }
+    
+    if (MTD[1]== dim(p.true)[1] & MTD[2] == dim(p.true)[2]){
+      overallo <- overallo
+    }else{
+      overallo <- overallo + sum(results[[i]]$npatients)*results[[i]]$ptoxic
+    }
+    sumTox <- sumTox + sum(results[[i]]$ntox)
+    sumPatients <- sumPatients + sum(results[[i]]$npatients)
   }
   
   # Compute the average of the results
+  nearlystop <- sum(sapply(results, `[[`, "earlystop"))
   avg_results <- list()
   avg_results$p.true <- p.true
-  avg_results$selpercent <- selpercent / nsimu
-  avg_results$npatients <- Reduce('+', lapply(results, `[[`, "npatients")) / nsimu
-  avg_results$ntox <- Reduce('+', lapply(results, `[[`, "ntox")) / nsimu
+  avg_results$selpercent <- selpercent / (nsimu)
+  avg_results$npatients <- Reduce('+', lapply(results, `[[`, "npatients")) / (nsimu)
+  avg_results$ntox <- Reduce('+', lapply(results, `[[`, "ntox")) / (nsimu)
   avg_results$MTDsel <- mean(sapply(results, `[[`, "correct"))
   avg_results$MTDallo <- mean(sapply(results, `[[`, "npercent"))
   avg_results$oversel <- sum(avg_results$selpercent[p.true > target])
-  avg_results$overallo <- mean(sapply(results, `[[`, "ptoxic"))
-  avg_results$averDLT <- mean(sapply(results, `[[`, "sumDLT"))
+  avg_results$overallo <- overallo/sumPatients
+  avg_results$averDLT <- sumTox/sumPatients
   avg_results$percentstop <- mean(sapply(results, `[[`, "earlystop"))
   avg_results$simu.setup <- data.frame(target = target, ncohort = ncohort, cohortsize = cohortsize, design = "2dCFO", nsimu = nsimu)
   

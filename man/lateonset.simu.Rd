@@ -64,6 +64,10 @@ The correct MTD is the dose level at which the true DLT rate is closest to the t
 \item patientDLT: a vector including the DLT outcome observed for each patient.
 \item sumDLT: the total number of DLT observed.
 \item earlystop: a binary indicator of whether the trial is early stopped (1 for yes).
+\item p_est: the isotonic estimate of the DLT probablity at each dose and associated \eqn{95\%} credible interval.
+\code{p_est = NA} if all tested doses are overly toxic.
+\item p_overdose: p_overdose: the probability of overdosing defined as \eqn{Pr(toxicity > \code{target}|data)}.
+\code{p_overdose = NA} if all tested doses are overly toxic.
 \item totaltime: the duration of the trial.
 \item entertimes: the time that each participant enters the trial.
 \item DLT.times: the time to DLT for each subject in the trial. If no DLT occurs for a certain subject,
@@ -116,5 +120,5 @@ Fang J, Yin G (2024). Fractional accumulative calibration‐free odds (f‐aCFO)
 in phase I clinical trials. \emph{Statistics in Medicine}.
 }
 \author{
-Jialu Fang, Wenliang Wang, Ninghao Zhang, and Guosheng Yin
+Jialu Fang, Ninghao Zhang, Wenliang Wang, and Guosheng Yin
 }

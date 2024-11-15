@@ -3,16 +3,16 @@
 #' Based on the toxicity outcomes of the enrolled cohorts, the function is used to conduct one single simulation and find the 
 #' maximum tolerated dose (MTD) for the CFO-type designs with late-onset toxicities for phase I trials, specifically, 
 #' including time-to-event CFO (TITE-CFO) design, fractional CFO (fCFO) design, benchmark CFO design, 
-#' time-to-event accumulative CFO (TITE-aCFO) design, fractional accumulative CFO (f-aCFO) design and benchmark aCFO design.
+#' time-to-event accumulative CFO (TITE-aCFO) design, fractional aCFO (f-aCFO) design, and benchmark aCFO design.
 #'
 #' @usage lateonset.simu(design, target, p.true, init.level = 1, ncohort, cohortsize,
 #'        assess.window, tte.para, accrual.rate, accrual.dist,  
 #'        prior.para = list(alp.prior = target, bet.prior = 1 - target), 
 #'        cutoff.eli = 0.95, early.stop = 0.95, seed = NULL)
 #'
-#' @param design option for selecting different designs, which can be set as \code{'TITE-CFO'}, \code{'TITE-aCFO'}, 
+#' @param design option for selecting different designs, which can be set as \code{'TITE-CFO'}, \code{'TITE-aCFO'},
 #'               \code{'fCFO'}, \code{'f-aCFO'}, \code{'bCFO'}, and \code{'b-aCFO'}. Specifically, \code{'bCFO'} refers 
-#'               to the benchmark CFO design, and \code{'b-aCFO'} denotes the benchmark aCFO design.
+#'               to the benchmark CFO design and \code{'b-aCFO'} denotes the benchmark aCFO design.
 #' @param target the target DLT rate.
 #' @param p.true the true DLT rates under the different dose levels.
 #' @param ncohort the total number of cohorts.
@@ -100,6 +100,7 @@
 #'                 ncohort, cohortsize, assess.window, tte.para, accrual.rate, accrual.dist, seed = 1)
 #' summary(faCFOtrial)
 #' plot(faCFOtrial)
+
 lateonset.simu <- function(design, target, p.true, init.level=1, ncohort, cohortsize,
                            assess.window, tte.para, accrual.rate, accrual.dist, 
                            prior.para=list(alp.prior=target, bet.prior=1-target), 
@@ -211,7 +212,7 @@ lateonset.simu <- function(design, target, p.true, init.level=1, ncohort, cohort
       over.doses <- res$over.doses
       overTox <- res$overTox
       current.t <- current.t + delta.time
-    }else{
+    } else {
       res <- lateonset.next(design, target, ndose, currdose, assess.window, enter.times, dlt.times, current.t, doses, 
                             prior.para, cutoff.eli, early.stop)
       over.doses <- res$over.doses

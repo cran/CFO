@@ -3,16 +3,15 @@
 #' Based on the toxicity outcomes of the enrolled cohorts, the function is used to determine the next 
 #' dose level in the CFO-type designs with late-onset toxicity for phase I trials, specifically, including 
 #' time-to-event CFO (TITE-CFO) design, fractional CFO (fCFO) design, benchmark CFO design, 
-#' time-to-event accumulative CFO (TITE-aCFO) design, fractional accumulative CFO (f-aCFO) design 
-#' and benchmark aCFO design.
+#' time-to-event accumulative CFO (TITE-aCFO) design, fractional aCFO (f-aCFO) design, and benchmark aCFO design.
 #' 
 #' @usage lateonset.next(design, target, ndose, currdose, assess.window, enter.times, dlt.times, 
 #'        current.t, doses, prior.para = list(alp.prior = target, bet.prior = 1 - target),
 #'        cutoff.eli = 0.95, early.stop = 0.95)
 #'
 #' @param design option for selecting different designs, which can be set as \code{'TITE-CFO'}, \code{'TITE-aCFO'}, 
-#'               \code{'fCFO'}, \code{'f-aCFO'}, \code{'bCFO'}, and \code{'b-aCFO'}. Specifically, \code{'bCFO'} refers 
-#'               to the benchmark CFO design, and \code{'b-aCFO'} denotes the benchmark aCFO design.
+#'               \code{'fCFO'}, \code{'f-aCFO'}, \code{'bCFO'}, and \code{'b-aCFO'}. Specifically, \code{'bCFO'} refers to the benchmark CFO design, and \code{'b-aCFO'} 
+#'               denotes the benchmark aCFO design.
 #' @param target the target DLT rate.
 #' @param ndose the number of dose levels.
 #' @param currdose the current dose level.
@@ -32,13 +31,13 @@
 #'
 #' @details Late-onset outcomes commonly occur in phase I trials involving targeted agents or immunotherapies. The TITE
 #'          framework and fractional framework serve as two imputation methods to handle pending data 
-#'          related to late-onset outcomes. This approach extends the CFO and aCFO designs to integrate time information 
+#'          related to late-onset outcomes. This approach extends the CFO, and aCFO designs to integrate time information 
 #'          for delayed outcomes, leading to the development of TITE-CFO, fCFO, TITE-aCFO, and f-aCFO designs. \cr
 #'          In the TITE framework context, an assumption about the distribution of time to DLT must be pre-specified, 
 #'          whereas the fractional framework does not require justification for a specific distribution of the time to 
-#'          DLT. Consequently, fCFO and f-aCFO adapt to a more diverse range of scenarios.\cr
+#'          DLT. Consequently, fCFO, and f-aCFO adapt to a more diverse range of scenarios.\cr
 #'          The function \code{lateonset.next()} also provides the option to execute 
-#'          the benchmark CFO and benchmark aCFO design. These two methods await complete observation of toxicity outcomes for 
+#'          the benchmark CFO and aCFO designs. These three methods await complete observation of toxicity outcomes for 
 #'          the previous cohorts before determining the next dose assignment. This enhances precision but comes at the 
 #'          expense of a prolonged trial duration.
 #' 
@@ -237,12 +236,9 @@ lateonset.next <- function(design, target, ndose, currdose, assess.window, enter
   ###############################################################################
   ############################MAIN DUNCTION######################################
   ###############################################################################
-  if (design == 'TITE-CFO'){accumulation = FALSE; impute.method = "TITE"
-  }else if (design == 'fCFO'){accumulation = FALSE; impute.method = "frac"
-  }else if (design == 'bCFO'){accumulation = FALSE; impute.method = "No"
-  }else if (design == 'TITE-aCFO'){accumulation = TRUE; impute.method = "TITE"
-  }else if (design == 'f-aCFO'){accumulation = TRUE; impute.method = "frac"
-  }else if (design == 'b-aCFO'){accumulation = TRUE; impute.method = "No"}
+  if (design == 'TITE-CFO' || design == 'TITE-aCFO' ){impute.method = "TITE"
+  }else if (design == 'fCFO' || design == 'f-aCFO' ){impute.method = "frac"
+  }else if (design == 'bCFO' || design == 'b-aCFO' ){impute.method = "No"}
   
   if (is.null(prior.para$alp.prior)){
     prior.para <- c(prior.para, list(alp.prior=target, bet.prior=1-target))
@@ -289,7 +285,6 @@ lateonset.next <- function(design, target, ndose, currdose, assess.window, enter
   
   over.doses <- rep(0, ndose)
   
-  
   for (i in 1:ndose){
     cy <- ays[i]
     cn <- ans[i]
@@ -318,7 +313,7 @@ lateonset.next <- function(design, target, ndose, currdose, assess.window, enter
   
   position <- which(over.doses == 1)[1]
   prior.para <- c(list(alp.prior=alp.prior, bet.prior=bet.prior))
-  if (accumulation == FALSE){
+  if (design == 'TITE-CFO' || design == 'fCFO' || design == 'bCFO'){
     if (currdose==1){
       cys <- c(NA, ays[1:(currdose+1)])
       cns <- c(NA, ans[1:(currdose+1)])
@@ -330,8 +325,11 @@ lateonset.next <- function(design, target, ndose, currdose, assess.window, enter
       cns <- ans[(currdose-1):(currdose+1)]
     }
     res <- CFO.next(target, cys, cns, currdose, prior.para, cutoff.eli, early.stop)
-  }else{
+  }else if(design == 'TITE-aCFO' || design == 'f-aCFO' || design == 'b-aCFO'){
     res <- aCFO.next (target, ays, ans, currdose, prior.para, cutoff.eli, early.stop)
+  }else{
+    stop("The input design is invalid; it can only be set as 'TITE-CFO', 'fCFO', 'bCFO', 
+         'TITE-aCFO', 'f-aCFO', or 'b-aCFO'.")
   }
   nextdose <- res$nextdose
   decision <- res$decision

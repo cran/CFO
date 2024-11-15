@@ -14,8 +14,8 @@ CFO.oc(nsimu = 5000, design, target, p.true, init.level = 1, ncohort, cohortsize
 
 \item{design}{option for selecting different designs, which can be set as \code{'CFO'}, \code{'aCFO'}, \code{'rCFO'},
 \code{'TITE-CFO'}, \code{'TITE-aCFO'}, \code{'fCFO'}, \code{'f-aCFO'}, \code{'bCFO'},
-and \code{'b-aCFO'}. Specifically, \code{'bCFO'} refers to the benchmark CFO design, and
-\code{'b-aCFO'} denotes the benchmark aCFO design.}
+and \code{'b-aCFO'}. Specifically, \code{'bCFO'} refers to the benchmark CFO design,
+and \code{'b-aCFO'} denotes the benchmark aCFO design.}
 
 \item{target}{the target DLT rate.}
 
@@ -120,6 +120,12 @@ rCFOoc <- CFO.oc (nsimu, design = 'rCFO', target, p.true, init.level, ncohort, c
 summary(rCFOoc)
 plot(rCFOoc)
 
+## get the operating characteristics for 5 simulations using the pCFO design
+pCFOoc <- CFO.oc (nsimu, design = 'pCFO', target, p.true, init.level, ncohort, cohortsize,
+       assess.window = NA, tte.para = NA, accrual.rate = NA, accrual.dist = NA, seeds = 1:nsimu)
+summary(pCFOoc)
+plot(pCFOoc)
+
 ## get the operating characteristics for 5 simulations using the TITE-CFO design
 TITECFOoc <- CFO.oc (nsimu, design = 'TITE-CFO', target, p.true, init.level, ncohort, cohortsize,
         assess.window, tte.para, accrual.rate, accrual.dist, seeds = 1:nsimu)
@@ -135,16 +141,6 @@ fCFOoc <- CFO.oc (nsimu, design = 'fCFO', target, p.true, init.level, ncohort, c
         assess.window, tte.para, accrual.rate, accrual.dist, seeds = 1:nsimu)
 summary(fCFOoc)
 plot(fCFOoc)
-## get the operating characteristics for 5 simulations using the bCFO design
-bCFOoc <- CFO.oc (nsimu, design = 'bCFO', target, p.true, init.level, ncohort, cohortsize,
-        assess.window, tte.para, accrual.rate, accrual.dist, seeds = 1:nsimu)
-summary(bCFOoc)
-plot(bCFOoc)
-## get the operating characteristics for 5 simulations using the b-aCFO design
-baCFOoc <- CFO.oc (nsimu, design = 'b-aCFO', target, p.true, init.level, ncohort, cohortsize,
-        assess.window, tte.para, accrual.rate, accrual.dist, seeds = 1:nsimu)
-summary(baCFOoc)
-plot(baCFOoc)
 }
 }
 \references{

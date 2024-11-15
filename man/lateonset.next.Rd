@@ -10,8 +10,8 @@ lateonset.next(design, target, ndose, currdose, assess.window, enter.times, dlt.
 }
 \arguments{
 \item{design}{option for selecting different designs, which can be set as \code{'TITE-CFO'}, \code{'TITE-aCFO'},
-\code{'fCFO'}, \code{'f-aCFO'}, \code{'bCFO'}, and \code{'b-aCFO'}. Specifically, \code{'bCFO'} refers
-to the benchmark CFO design, and \code{'b-aCFO'} denotes the benchmark aCFO design.}
+\code{'fCFO'}, \code{'f-aCFO'}, \code{'bCFO'}, and \code{'b-aCFO'}. Specifically, \code{'bCFO'} refers to the benchmark CFO design, and \code{'b-aCFO'}
+denotes the benchmark aCFO design.}
 
 \item{target}{the target DLT rate.}
 
@@ -63,19 +63,18 @@ are no patients at the corresponding dose level.
 Based on the toxicity outcomes of the enrolled cohorts, the function is used to determine the next
 dose level in the CFO-type designs with late-onset toxicity for phase I trials, specifically, including
 time-to-event CFO (TITE-CFO) design, fractional CFO (fCFO) design, benchmark CFO design,
-time-to-event accumulative CFO (TITE-aCFO) design, fractional accumulative CFO (f-aCFO) design
-and benchmark aCFO design.
+time-to-event accumulative CFO (TITE-aCFO) design, fractional aCFO (f-aCFO) design, and benchmark aCFO design.
 }
 \details{
 Late-onset outcomes commonly occur in phase I trials involving targeted agents or immunotherapies. The TITE
 framework and fractional framework serve as two imputation methods to handle pending data
-related to late-onset outcomes. This approach extends the CFO and aCFO designs to integrate time information
+related to late-onset outcomes. This approach extends the CFO, and aCFO designs to integrate time information
 for delayed outcomes, leading to the development of TITE-CFO, fCFO, TITE-aCFO, and f-aCFO designs. \cr
 In the TITE framework context, an assumption about the distribution of time to DLT must be pre-specified,
 whereas the fractional framework does not require justification for a specific distribution of the time to
-DLT. Consequently, fCFO and f-aCFO adapt to a more diverse range of scenarios.\cr
+DLT. Consequently, fCFO, and f-aCFO adapt to a more diverse range of scenarios.\cr
 The function \code{lateonset.next()} also provides the option to execute
-the benchmark CFO and benchmark aCFO design. These two methods await complete observation of toxicity outcomes for
+the benchmark CFO and aCFO designs. These three methods await complete observation of toxicity outcomes for
 the previous cohorts before determining the next dose assignment. This enhances precision but comes at the
 expense of a prolonged trial duration.
 }

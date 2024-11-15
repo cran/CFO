@@ -12,7 +12,7 @@ lateonset.simu(design, target, p.true, init.level = 1, ncohort, cohortsize,
 \arguments{
 \item{design}{option for selecting different designs, which can be set as \code{'TITE-CFO'}, \code{'TITE-aCFO'},
 \code{'fCFO'}, \code{'f-aCFO'}, \code{'bCFO'}, and \code{'b-aCFO'}. Specifically, \code{'bCFO'} refers
-to the benchmark CFO design, and \code{'b-aCFO'} denotes the benchmark aCFO design.}
+to the benchmark CFO design and \code{'b-aCFO'} denotes the benchmark aCFO design.}
 
 \item{target}{the target DLT rate.}
 
@@ -78,7 +78,7 @@ The correct MTD is the dose level at which the true DLT rate is closest to the t
 Based on the toxicity outcomes of the enrolled cohorts, the function is used to conduct one single simulation and find the
 maximum tolerated dose (MTD) for the CFO-type designs with late-onset toxicities for phase I trials, specifically,
 including time-to-event CFO (TITE-CFO) design, fractional CFO (fCFO) design, benchmark CFO design,
-time-to-event accumulative CFO (TITE-aCFO) design, fractional accumulative CFO (f-aCFO) design and benchmark aCFO design.
+time-to-event accumulative CFO (TITE-aCFO) design, fractional aCFO (f-aCFO) design, and benchmark aCFO design.
 }
 \note{
 The early stopping and dose elimination rules are incorporated into the design

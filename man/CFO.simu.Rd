@@ -9,7 +9,7 @@ CFO.simu(design, target, p.true, init.level = 1, ncohort, cohortsize,
        cutoff.eli = 0.95, early.stop = 0.95, seed = NULL)
 }
 \arguments{
-\item{design}{option for selecting different designs, which can be set as \code{'CFO'}, \code{'aCFO'} or \code{'rCFO'}.}
+\item{design}{option for selecting different designs, which can be set as \code{'CFO'}, \code{'aCFO'}, \code{'rCFO'} or \code{'pCFO'}.}
 
 \item{target}{the target DLT rate.}
 
@@ -55,12 +55,12 @@ The correct MTD is the dose level at which the true DLT rate is closest to the t
 }
 }
 \description{
-In the CFO, aCFO, and rCFO designs for phase I trials, the function is used to conduct one single simulation and find the maximum tolerated dose (MTD).
+In the CFO, aCFO, rCFO, and pCFO designs for phase I trials, the function is used to conduct one single simulation and find the maximum tolerated dose (MTD).
 }
 \note{
-The \code{CFO.simu()} function is designed to conduct a single CFO, aCFO or rCFO simulation. If \code{design = 'CFO'}, it corresponds
+The \code{CFO.simu()} function is designed to conduct a single CFO, aCFO, rCFO or pCFO simulation. If \code{design = 'CFO'}, it corresponds
 to the CFO design. If \code{design = 'aCFO'}, it corresponds to the aCFO design. If \code{design = 'rCFO'}, it corresponds to the
-rCFO design. \cr
+rCFO design. If \code{design = 'pCFO'}, it corresponds to the pCFO design.\cr
 The early stopping and dose elimination rules are incorporated into designs
 to ensure patient safety and benefit. If there is substantial evidence indicating that the current dose level
 exhibits excessive toxicity, we exclude the current dose level as well as higher dose levels from the trial. If the lowest dose level is overly toxic, the trial will be terminated
@@ -86,6 +86,10 @@ plot(aCFOtrial)
 rCFOtrial <- CFO.simu(design = 'rCFO', target, p.true, init.level, ncohort, cohortsize, seed = 1)
 summary(rCFOtrial)
 plot(rCFOtrial)
+#' ### find the MTD for a single pCFO simulation
+pCFOtrial <- CFO.simu(design = 'pCFO', target, p.true, init.level, ncohort, cohortsize, seed = 1)
+summary(pCFOtrial)
+plot(pCFOtrial)
 }
 }
 \references{

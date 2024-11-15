@@ -1,12 +1,12 @@
 #' Conduct one simulation using the calibration-free odds (CFO), accumulative CFO (aCFO) design, or randomized CFO (rCFO) design for phase I trials.
 #' 
-#' In the CFO, aCFO, and rCFO designs for phase I trials, the function is used to conduct one single simulation and find the maximum tolerated dose (MTD).
+#' In the CFO, aCFO, rCFO, and pCFO designs for phase I trials, the function is used to conduct one single simulation and find the maximum tolerated dose (MTD).
 #'
 #' @usage CFO.simu(design, target, p.true, init.level = 1, ncohort, cohortsize,
 #'        prior.para = list(alp.prior = target, bet.prior = 1 - target), 
 #'        cutoff.eli = 0.95, early.stop = 0.95, seed = NULL)
 #'
-#' @param design option for selecting different designs, which can be set as \code{'CFO'}, \code{'aCFO'} or \code{'rCFO'}.
+#' @param design option for selecting different designs, which can be set as \code{'CFO'}, \code{'aCFO'}, \code{'rCFO'} or \code{'pCFO'}.
 #' @param target the target DLT rate.
 #' @param p.true the true DLT rates under the different dose levels.
 #' @param init.level the dose level assigned to the first cohort. The default value \code{init.level} is 1.
@@ -21,9 +21,9 @@
 #'                generally works well.
 #' @param seed an integer to be set as the seed of the random number generator for reproducible results. The default value is set to \code{NULL}.
 #'                            
-#' @note The \code{CFO.simu()} function is designed to conduct a single CFO, aCFO or rCFO simulation. If \code{design = 'CFO'}, it corresponds 
+#' @note The \code{CFO.simu()} function is designed to conduct a single CFO, aCFO, rCFO or pCFO simulation. If \code{design = 'CFO'}, it corresponds 
 #'          to the CFO design. If \code{design = 'aCFO'}, it corresponds to the aCFO design. If \code{design = 'rCFO'}, it corresponds to the 
-#'          rCFO design. \cr
+#'          rCFO design. If \code{design = 'pCFO'}, it corresponds to the pCFO design.\cr
 #'          The early stopping and dose elimination rules are incorporated into designs 
 #'          to ensure patient safety and benefit. If there is substantial evidence indicating that the current dose level 
 #'          exhibits excessive toxicity, we exclude the current dose level as well as higher dose levels from the trial. If the lowest dose level is overly toxic, the trial will be terminated 
@@ -76,6 +76,10 @@
 #' rCFOtrial <- CFO.simu(design = 'rCFO', target, p.true, init.level, ncohort, cohortsize, seed = 1)
 #' summary(rCFOtrial)
 #' plot(rCFOtrial)
+#' #' ### find the MTD for a single pCFO simulation
+#' pCFOtrial <- CFO.simu(design = 'pCFO', target, p.true, init.level, ncohort, cohortsize, seed = 1)
+#' summary(pCFOtrial)
+#' plot(pCFOtrial)
 #'}
 #' @export
 CFO.simu <- function(design, target, p.true, init.level=1, ncohort, cohortsize,
@@ -139,15 +143,13 @@ CFO.simu <- function(design, target, p.true, init.level=1, ncohort, cohortsize,
   ans <- rep(0, ndose) # number of subject for different doses.
   tover.doses <- rep(0, ndose) # Whether each dose is overdosed or not, 1 yes
   DLTlist <- c()
-  
   for (i in 1:ncohort){
     pc <- p.true[currdose]
     doselist[i] <- currdose
-    
+    # set.seed(seed+i)
     # sample from current dose
     cres <- rbinom(cohortsize, 1, pc)
     DLTlist <- c(DLTlist, cres)
-    
     # update results
     ays[currdose] <- ays[currdose] + sum(cres)
     ans[currdose] <- ans[currdose] + cohortsize
@@ -179,7 +181,7 @@ CFO.simu <- function(design, target, p.true, init.level=1, ncohort, cohortsize,
     }
     
     prior.para <- c(list(alp.prior=alp.prior, bet.prior=bet.prior))
-    if (design == 'CFO'|| design == 'rCFO'){
+    if (design == 'CFO'|| design == 'rCFO' || design == 'pCFO'){
       # the results for current 3 dose levels
       if (currdose!=1){
         cys <- ays[(currdose-1):(currdose+1)]
@@ -191,12 +193,15 @@ CFO.simu <- function(design, target, p.true, init.level=1, ncohort, cohortsize,
       if (design == 'CFO'){
         currdose <- CFO.next(target, cys, cns, currdose, prior.para, cutoff.eli, early.stop)$nextdose
       } else if (design == 'rCFO'){
-        currdose <- rCFO.next(target, cys, cns, currdose, prior.para, cutoff.eli, early.stop, seed+i)$nextdose
+        if (!is.null(seed)){seed <- seed+i}
+        currdose <- rCFO.next(target, cys, cns, currdose, prior.para, cutoff.eli, early.stop, seed)$nextdose
+      } else if (design == 'pCFO'){
+        currdose <- pCFO.next(target, cys, cns, currdose, prior.para, cutoff.eli, early.stop)$nextdose
       }
     }else if (design == 'aCFO'){
       currdose <- aCFO.next(target, ays, ans, currdose, prior.para, cutoff.eli, early.stop)$nextdose
     }else{
-      stop("The input design is invalid; it can only be set as 'CFO', 'aCFO' or 'rCFO'.")
+      stop("The input design is invalid; it can only be set as 'CFO', 'aCFO', 'rCFO' or 'pCFO'.")
     }
     
     if (i == ncohort){

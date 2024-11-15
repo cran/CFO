@@ -257,6 +257,7 @@ plot.cfo<- function (x,..., name = deparse(substitute(x)))
             # Plot efficacy data
             geom_point(data = dfEFF, aes(x = sequence, y = dose_levels - 0.05, shape = as.factor(EFF_observed)), 
                        size = 2.5, color = "black") +
+            geom_step(direction = 'hv', color = 'black') +
             scale_fill_manual(values = c('white', 'black'), labels = c('DLT not observed', 'DLT observed')) +
             scale_shape_manual(values = c(13, 21), labels = c('No efficacy', 'Efficacy')) +
             scale_y_continuous(breaks = 1:length(y_labels), labels = y_labels) +
